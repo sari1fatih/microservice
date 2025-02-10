@@ -6,14 +6,16 @@ using IdentityService.Application.Features.Roles.Commands.Delete;
 using IdentityService.Application.Features.Roles.Commands.Update;
 using IdentityService.Application.Features.Roles.Queries.GetById;
 using IdentityService.Application.Features.Roles.Queries.GetList;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace IdentityService.Api.Controllers;
+
 [Authorize(Policy = "TokenAuthorizationHandler")]
-[EnableRateLimiting("RateLimitUserName")]
-[Authorize(Roles = ("Admin"))]
+[EnableRateLimiting("RateLimitUserId")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
 [Route("api/[controller]")]
 [ApiController]
 public class RolesController : BaseController

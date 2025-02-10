@@ -6,9 +6,7 @@ using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Api.Attributes;
 using IdentityService.Application.Features.Auths.Commands.Login;
 using IdentityService.Application.Features.Auths.Commands.RefreshToken;
-using IdentityService.Application.Features.Auths.Commands.Register;
 using IdentityService.Application.Features.Auths.Commands.RevokeToken;
-using IdentityService.Application.Features.Auths.Commands.VerifyRegister;
 using IdentityService.Application.Features.Auths.ResetPassword;
 using IdentityService.Application.Features.Auths.VerifyResetPassword;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,31 +32,10 @@ namespace IdentityService.Api.Controllers
             _tokenOptions = tokenOptionsConfiguration.Value;
         }
 
-        
+
         #region AllowAnonymous
-        [EnableRateLimiting("RateLimitIp")] 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand userForRegisterDto)
-        {
-            userForRegisterDto.IpAddress = getIpAddress();
 
-            var result = await Mediator.Send(userForRegisterDto);
-
-            return Ok(result);
-        }
-        [EnableRateLimiting("RateLimitIp")] 
-        [HttpPost("VerifyRegister")]
-        public async Task<IActionResult> VerifyRegister([FromBody] VerifyForRegisterDto verifyForRegisterDto)
-        {
-            VerifyRegisterCommand registerCommand = new()
-                { VerifyForRegisterDto = verifyForRegisterDto, IpAddress = getIpAddress() };
-            var result = await Mediator.Send(registerCommand);
-
-            if (result.ApiResultType == ApiResultType.Success && result.Data?.RefreshToken is not null)
-                setRefreshTokenToCookie(result.Data.RefreshToken);
-            return Created(uri: "", result);
-        }
-        [EnableRateLimiting("RateLimitIp")] 
+        [EnableRateLimiting("RateLimitIp")]
         [ElasticsearchRequestResponse]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
@@ -70,9 +47,10 @@ namespace IdentityService.Api.Controllers
 
             return Ok(result);
         }
-        
+
         [Authorize(Policy = "TokenAuthorizationHandler")]
-        [EnableRateLimiting("RateLimitIp")] 
+        [EnableRateLimiting("RateLimitIp")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -85,25 +63,25 @@ namespace IdentityService.Api.Controllers
 
             return Created(uri: "", result);
         }
-        
+
         #endregion AllowAnonymous
-       
-       [EnableRateLimiting("RateLimitUserName")] 
-       [Authorize(Policy = "TokenAuthorizationHandler")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
+
+        [EnableRateLimiting("RateLimitUserId")]
+        [Authorize(Policy = "TokenAuthorizationHandler")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("RevokeToken")]
         public async Task<IActionResult> RevokeToken(
             [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
             string? refreshToken)
         {
             RevokeTokenCommand revokeTokenCommand =
-                new() { Jti = getJtiFromRefreshTokenCookies(refreshToken), IpAddress = getIpAddress() }; 
-            return Ok( await Mediator.Send(revokeTokenCommand));
-        } 
-       
-        [EnableRateLimiting("RateLimitUserName")] 
+                new() { Jti = getJtiFromRefreshTokenCookies(refreshToken), IpAddress = getIpAddress() };
+            return Ok(await Mediator.Send(revokeTokenCommand));
+        }
+
+        [EnableRateLimiting("RateLimitUserId")]
         [Authorize(Policy = "TokenAuthorizationHandler")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPasswordCommand()
         {
@@ -112,9 +90,10 @@ namespace IdentityService.Api.Controllers
 
             return Ok(result);
         }
-        [EnableRateLimiting("RateLimitUserName")] 
+
+        [EnableRateLimiting("RateLimitUserId")]
         [Authorize(Policy = "TokenAuthorizationHandler")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("VerifyResetPassword")]
         public async Task<IActionResult> VerifyResetPasswordCommand(
             [FromBody] VerifyResetPasswordCommand verifyResetPasswordCommand)
@@ -122,21 +101,20 @@ namespace IdentityService.Api.Controllers
             var result = await Mediator.Send(verifyResetPasswordCommand);
 
             return Ok(result);
-        } 
+        }
 
         private string getJtiFromRefreshTokenCookies(string? reqRefreshToken)
         {
-            reqRefreshToken = string.IsNullOrEmpty(reqRefreshToken) 
-                ? Request.Cookies["refreshToken"] 
+            reqRefreshToken = string.IsNullOrEmpty(reqRefreshToken)
+                ? Request.Cookies["refreshToken"]
                 : reqRefreshToken;
-            var refreshToken= reqRefreshToken ??
-                              throw new ArgumentException("Refresh token is not found in request cookies.");
+            var refreshToken = reqRefreshToken ??
+                               throw new ArgumentException("Refresh token is not found in request cookies.");
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(refreshToken);
 
             var jti = jwtToken.Claims.FirstOrDefault(c => c.Type == CustomClaimKeys.Jti)?.Value;
             return jti;
-            
         }
 
         private void setRefreshTokenToCookie(string refreshToken)

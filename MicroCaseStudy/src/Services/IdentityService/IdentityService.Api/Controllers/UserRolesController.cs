@@ -5,6 +5,7 @@ using IdentityService.Application.Features.UserRoles.Commands.Create;
 using IdentityService.Application.Features.UserRoles.Commands.Delete;
 using IdentityService.Application.Features.UserRoles.Queries.GetById;
 using IdentityService.Application.Features.UserRoles.Queries.GetList;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -12,8 +13,8 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace IdentityService.Api.Controllers;
 
 [Authorize(Policy = "TokenAuthorizationHandler")]
-[EnableRateLimiting("RateLimitUserName")]
-[Authorize(Roles = ("Admin"))]
+[EnableRateLimiting("RateLimitUserId")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
 [Route("api/[controller]")]
 [ApiController]
 public class UserRolesController: BaseController

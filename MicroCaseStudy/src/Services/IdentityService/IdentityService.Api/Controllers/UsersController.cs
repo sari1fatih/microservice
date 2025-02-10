@@ -13,7 +13,9 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace IdentityService.Api.Controllers
 {
-    [EnableRateLimiting("RateLimitUserName")]
+    [Authorize(Policy = "TokenAuthorizationHandler")]
+    [EnableRateLimiting("RateLimitUserId")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : BaseController
@@ -35,9 +37,7 @@ namespace IdentityService.Api.Controllers
             var response = await Mediator.Send(getListByDynamicModelQuery);
             return Ok(response);
         }
-
-        [Authorize(Policy = "TokenAuthorizationHandler")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+  
         [HttpPut()]
         public async Task<IActionResult> UpdateByID([FromBody] UpdateUserCommand command)
         {

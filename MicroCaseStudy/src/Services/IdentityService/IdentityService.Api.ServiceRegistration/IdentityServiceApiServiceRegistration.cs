@@ -67,9 +67,9 @@ public static class IdentityServiceApiServiceRegistration
             }; 
             
             
-            options.AddPolicy("RateLimitUserName", context =>
+            options.AddPolicy("RateLimitUserId", context =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: context.User?.Claims?.FirstOrDefault(x => x
-                    .Type == CustomClaimKeys.Username)?.Value,
+                    .Type == CustomClaimKeys.Id)?.Value,
                     factory: _ => new FixedWindowRateLimiterOptions()
                     {
                         PermitLimit = ratelimitingSettings.PermitLimit,
