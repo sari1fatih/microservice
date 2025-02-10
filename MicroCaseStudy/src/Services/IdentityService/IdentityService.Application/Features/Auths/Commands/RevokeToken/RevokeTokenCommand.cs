@@ -3,9 +3,9 @@ using Core.Application.Pipelines.Transaction;
 using Core.Redis.Helpers;
 using Core.Redis.MediaR;
 using Core.WebAPI.Appsettings;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Application.Features.Auths.Rules;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Manager.AuthManager;
 using MediatR;
 
@@ -72,7 +72,7 @@ public class RevokeTokenCommand : IRequest<Response<RevokedTokenDto>>, ITransact
             _jwtRemoveRedisCachableRequest.IsDeletedUserAll = false; 
             
             return _baseService.CreateSuccessResult<RevokedTokenDto>(null,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     } 
 }

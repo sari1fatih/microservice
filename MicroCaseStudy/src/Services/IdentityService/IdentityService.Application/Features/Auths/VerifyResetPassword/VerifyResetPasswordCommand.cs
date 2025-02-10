@@ -1,10 +1,10 @@
 using Core.Redis.Helpers;
 using Core.Security.Hashing;
 using Core.WebAPI.Appsettings;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Application.Features.Auths.Commands.Redis;
 using IdentityService.Application.Features.Auths.Rules;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Manager.UserManager;
 using IdentityService.Domain.Entities;
 using MediatR;
@@ -73,7 +73,7 @@ public class VerifyResetPasswordCommand : IRequest<Response<string>>
             await _userManager.UpdateAsync(user);
             await _distributedHelper.RemoveCache(string.Empty, _userSession.Email, cancellationToken);
             return _baseService.CreateSuccessResult<string>(string.Empty,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

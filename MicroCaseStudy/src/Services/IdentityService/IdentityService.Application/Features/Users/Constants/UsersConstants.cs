@@ -1,6 +1,6 @@
 namespace IdentityService.Application.Features.Users.Constants;
 
-public static class UsersMessages
+public static class UsersConstants
 {
     public const string UserDontExists = "Kullanıcı bulunmuyor";
     public const string PasswordDontMatch = "Parola eşleşmiyor.";

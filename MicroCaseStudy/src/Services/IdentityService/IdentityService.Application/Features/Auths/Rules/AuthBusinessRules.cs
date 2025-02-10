@@ -15,44 +15,44 @@ public class AuthBusinessRules : BaseBusinessRules
     public async Task UserShouldBeExistsWhenSelected(User? user)
     {
         if (user == null)
-            throw new BusinessException(AuthMessages.UserDontExists);
+            throw new BusinessException(AuthConstants.UserDontExists);
     } 
 
     
     public async Task RefreshTokenShouldBeExists(RefreshToken? refreshToken)
     {
         if (refreshToken == null)
-            throw new BusinessException(AuthMessages.RefreshDontExists);
+            throw new BusinessException(AuthConstants.RefreshDontExists);
     }
 
     public async Task RefreshTokenShouldBeActive(RefreshToken refreshToken)
     {
         if (refreshToken.RevokedDate != null && DateTime.UtcNow >= refreshToken.ExpiresDate)
-            throw new BusinessException(AuthMessages.InvalidRefreshToken);
+            throw new BusinessException(AuthConstants.InvalidRefreshToken);
     }
 
     public async Task UserEmailShouldBeNotExists(User? user,string email)
     {
         if (user != null && user.Email == email)
-            throw new BusinessException(AuthMessages.UserMailAlreadyExists);
+            throw new BusinessException(AuthConstants.UserMailAlreadyExists);
     }
     
     public async Task UserNameShouldBeNotExists(User? user,string userName)
     {
         if (user != null && user.Username == userName)
-            throw new BusinessException(AuthMessages.UsernameAlreadyExists);
+            throw new BusinessException(AuthConstants.UsernameAlreadyExists);
     }
  
 
     public async Task UserPasswordShouldBeMatch(User user, string password)
     {
         if (!HashingHelper.VerifyPasswordHash(password, user!.PasswordHash, user.PasswordSalt))
-            throw new BusinessException(AuthMessages.PasswordDontMatch);
+            throw new BusinessException(AuthConstants.PasswordDontMatch);
     }
 
     public async Task MatchActivationCode(string activationCodeOld, string activationCodeNew)
     {
         if (activationCodeOld != activationCodeNew)
-            throw new BusinessException(AuthMessages.ActivationCodeMismatch);
+            throw new BusinessException(AuthConstants.ActivationCodeMismatch);
     }
 }

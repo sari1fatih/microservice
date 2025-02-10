@@ -6,8 +6,8 @@ using Core.Application.Responses;
 using Core.Persistance.Dynamic;
 using Core.Persistance.Paging;
 using Core.Redis.MediaR;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
 using MediatR;
@@ -39,13 +39,14 @@ public class GetListUserQuery : IRequest<Response<GetListResponse<GetListUserDto
             Paginate<User> users = await _userRepository.GetListByDynamicAsync(
                 request.DynamicQuery,
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize
+                size: request.PageRequest.PageSize ,
+                enableTracking: false
             );
 
             GetListResponse<GetListUserDto> response = _mapper.Map<GetListResponse<GetListUserDto>>(users);
            
             return _baseService.CreateSuccessResult<GetListResponse<GetListUserDto>>(response,
-             InternalsMessages.Success);
+             InternalsConstants.Success);
         }
     }
  

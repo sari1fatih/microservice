@@ -2,7 +2,6 @@ using System.Text.Json;
 using Core.CrossCuttingConcerns.Serilog;
 using Core.WebAPI.Appsettings;
 using IdentityService.Domain.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

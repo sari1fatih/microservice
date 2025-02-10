@@ -5,5 +5,5 @@ namespace IdentityService.Persistance.Abstract.Repositories;
 
 public interface IRefreshTokenRepository: IAsyncRepository<RefreshToken>, IRepository<RefreshToken>
 {
-    Task<List<RefreshToken>> GetOldRefreshTokensAsync(int userId);
+    Task DeleteOldRefreshTokensAsync(bool all, int userId);
 }

@@ -24,20 +24,20 @@ public class UserRoleBusinessRules: BaseBusinessRules
     public async Task UserRoleShouldExistWhenSelected(Domain.Entities.UserRole? userRole)
     {
         if (userRole == null)
-            await throwBusinessException(UserRolesMessages.UserRoleNotExists);
+            await throwBusinessException(UserRolesConstants.UserRoleNotExists);
     }
 
     public async Task UserRoleIdShouldExistWhenSelected(int id)
     {
         bool doesExist = await _userRoleRepository.AnyAsync(predicate: b => b.Id == id);
-        if (!doesExist)
-            await throwBusinessException(UserRolesMessages.UserRoleNotExists);
+        if (doesExist)
+            await throwBusinessException(UserRolesConstants.UserRoleNotExists);
     }
 
     public async Task UserRoleShouldNotExistWhenSelected(Domain.Entities.UserRole? userRole)
     {
         if (userRole != null)
-            await throwBusinessException(UserRolesMessages.UserRoleAlreadyExists);
+            await throwBusinessException(UserRolesConstants.UserRoleAlreadyExists);
     }
 
     public async Task UserShouldNotHasRoleAlreadyWhenInsert(int userId, int roleId)
@@ -46,7 +46,7 @@ public class UserRoleBusinessRules: BaseBusinessRules
             u.UserId == userId && u.RoleId == roleId
         );
         if (doesExist)
-            await throwBusinessException(UserRolesMessages.UserRoleAlreadyExists);
+            await throwBusinessException(UserRolesConstants.UserRoleAlreadyExists);
     }
 
     public async Task UserShouldNotHasRoleAlreadyWhenUpdated(int id, int userId, int roleId)
@@ -55,6 +55,6 @@ public class UserRoleBusinessRules: BaseBusinessRules
             uoc.Id == id && uoc.UserId == userId && uoc.RoleId == roleId
         );
         if (doesExist)
-            await throwBusinessException(UserRolesMessages.UserRoleAlreadyExists);
+            await throwBusinessException(UserRolesConstants.UserRoleAlreadyExists);
     }
 }

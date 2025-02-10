@@ -3,8 +3,8 @@ using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistance.Dynamic;
 using Core.Persistance.Paging;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
 using MediatR;
@@ -48,14 +48,15 @@ public class GetListRoleQuery : IRequest<Response<GetListResponse<GetListRoleDto
             Paginate<Role> role = await _roleRepository.GetListByDynamicAsync(
                 request.DynamicQuery,
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize
+                size: request.PageRequest.PageSize,
+                enableTracking: false
             );
 
             GetListResponse<GetListRoleDto> response = _mapper.Map<
                 GetListResponse<GetListRoleDto>
             >(role);
             return _baseService.CreateSuccessResult<GetListResponse<GetListRoleDto>>(response,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

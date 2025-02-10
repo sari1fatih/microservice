@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+      <PackageReference Include="MediatR" Version="12.4.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Cores\Core.Application\Core.Application.csproj" />
+      <ProjectReference Include="..\..\..\Cores\Core.Mailing.MailKit\Core.Mailing.MailKit.csproj" />
+      <ProjectReference Include="..\..\..\Cores\Core.Mailing\Core.Mailing.csproj" />
+      <ProjectReference Include="..\CustomerService.Domain\CustomerService.Domain.csproj" />
+      <ProjectReference Include="..\CustomerService.Persistance.Abstract\CustomerService.Persistance.Abstract.csproj" />
+    </ItemGroup>
+
+</Project>

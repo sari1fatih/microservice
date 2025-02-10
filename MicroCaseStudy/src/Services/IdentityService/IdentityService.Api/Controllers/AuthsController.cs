@@ -6,7 +6,9 @@ using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Api.Attributes;
 using IdentityService.Application.Features.Auths.Commands.Login;
 using IdentityService.Application.Features.Auths.Commands.RefreshToken;
+using IdentityService.Application.Features.Auths.Commands.Register;
 using IdentityService.Application.Features.Auths.Commands.RevokeToken;
+using IdentityService.Application.Features.Auths.Commands.VerifyRegister;
 using IdentityService.Application.Features.Auths.ResetPassword;
 using IdentityService.Application.Features.Auths.VerifyResetPassword;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +37,30 @@ namespace IdentityService.Api.Controllers
 
         #region AllowAnonymous
 
+        [EnableRateLimiting("RateLimitIp")] 
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterCommand userForRegisterDto)
+        {
+            userForRegisterDto.IpAddress = getIpAddress();
+
+            var result = await Mediator.Send(userForRegisterDto);
+
+            return Ok(result);
+        }
+        [EnableRateLimiting("RateLimitIp")] 
+        [HttpPost("VerifyRegister")]
+        public async Task<IActionResult> VerifyRegister([FromBody] VerifyForRegisterDto verifyForRegisterDto)
+        {
+            VerifyRegisterCommand registerCommand = new()
+                { VerifyForRegisterDto = verifyForRegisterDto, IpAddress = getIpAddress() };
+            var result = await Mediator.Send(registerCommand);
+
+            if (result.ApiResultType == ApiResultType.Success && result.Data?.RefreshToken is not null)
+                setRefreshTokenToCookie(result.Data.RefreshToken);
+            return Created(uri: "", result);
+        }
+        
+        
         [EnableRateLimiting("RateLimitIp")]
         [ElasticsearchRequestResponse]
         [HttpPost("Login")]

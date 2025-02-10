@@ -3,9 +3,9 @@ using AutoMapper;
 using Core.Application.Pipelines.Transaction;
 using Core.Redis.MediaR;
 using Core.Security.JWT.Dtos;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Application.Features.Auths.Rules;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Manager.AuthManager;
 using IdentityService.Application.Manager.UserManager;
 using IdentityService.Domain.Entities;
@@ -110,7 +110,7 @@ public class RefreshTokenCommand : IRequest<Response<RefreshedTokensDto>>, ITran
             _jwtRemoveRedisCachableRequest.UserId =refreshToken.UserId.ToString();
             _jwtRemoveRedisCachableRequest.IsDeletedUserAll = false;
             return _baseService.CreateSuccessResult<RefreshedTokensDto>(refreshedTokensDto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

@@ -27,7 +27,12 @@ public class RoleBusinessRules : BaseBusinessRules
         if (role == null)
             await throwBusinessException(RolesConstants.NotExists);
     } 
-
+    public async Task RoleShouldExistWhenSelected(int roleId)
+    {
+        bool doesExists = await _roleRepository.AnyAsync(predicate: u => u.Id ==roleId);
+        if (!doesExists)
+            await throwBusinessException(RolesConstants.NotExists);
+    }
     
     public async Task RoleInUse(ICollection<UserRole> role)
     {

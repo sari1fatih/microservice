@@ -78,13 +78,7 @@ public class AuthManager : IAuthManager
         return addedRefreshToken;
     }
 
-    public async Task DeleteAllRefreshTokensByUserId(int userId)
-    {
-        var refreshTokens = await _refreshTokenRepository.GetOldRefreshTokensAsync(userId);
-        await _refreshTokenRepository.DeleteRangeAsync(refreshTokens, TableDeletedParameters.DeletedAtPropertyName,
-            TableDeletedParameters.DeletedByPropertyName,TableDeletedParameters.IsDeletedPropertyName);
-        
-    }
+  
 
     public async Task RevokeDescendantRefreshTokens(RefreshToken refreshToken, string ipAddress, string reason)
     {

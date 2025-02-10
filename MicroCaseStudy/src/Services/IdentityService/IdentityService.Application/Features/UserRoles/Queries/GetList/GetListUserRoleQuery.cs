@@ -3,11 +3,12 @@ using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistance.Dynamic;
 using Core.Persistance.Paging;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Application.Features.UserRoles.Queries.GetList;
 
@@ -46,7 +47,11 @@ public class GetListUserRoleQuery : IRequest<Response<GetListResponse<GetListUse
             CancellationToken cancellationToken
         )
         {
-            Paginate<UserRole> userRoles = await _userRoleRepository.GetListAsync(
+            Paginate<UserRole> userRoles = await _userRoleRepository.GetListByDynamicAsync(
+                request.DynamicQuery,
+                include: m => m
+                    .Include(b => b.User)
+                    .Include(b => b.Role),  
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
                 enableTracking: false
@@ -57,7 +62,7 @@ public class GetListUserRoleQuery : IRequest<Response<GetListResponse<GetListUse
             >(userRoles);
             return _baseService.CreateSuccessResult<GetListResponse<GetListUserRoleDto>>(
                 mappedUserRoleListModel,
-                InternalsMessages.Success
+                InternalsConstants.Success
                 );
         }
     }

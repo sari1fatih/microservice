@@ -1,7 +1,7 @@
 using AutoMapper;
 using Core.Application.Enums;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.Roles.Rules;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
@@ -57,7 +57,7 @@ public class CreateRoleCommand: IRequest<Response< CreatedRoleDto>>
 
             CreatedRoleDto dto = _mapper.Map<CreatedRoleDto>(createdRole);
             return _baseService.CreateSuccessResult<CreatedRoleDto>(dto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

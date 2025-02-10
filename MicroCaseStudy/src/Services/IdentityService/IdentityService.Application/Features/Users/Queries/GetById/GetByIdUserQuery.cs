@@ -1,6 +1,6 @@
 using AutoMapper;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.Users.Rules;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
@@ -38,7 +38,7 @@ public class GetByIdUserQuery: IRequest<Response<GetByIdUserDto>>
             var dto = _mapper.Map<GetByIdUserDto>(user);
             
             return _baseService.CreateSuccessResult(dto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

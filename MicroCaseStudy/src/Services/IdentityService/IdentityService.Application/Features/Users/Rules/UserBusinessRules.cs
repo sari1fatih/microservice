@@ -24,33 +24,34 @@ public class UserBusinessRules: BaseBusinessRules
     public async Task UserShouldBeExistsWhenSelected(User? user)
     {
         if (user == null)
-            await throwBusinessException(UsersMessages.UserDontExists);
+            await throwBusinessException(UsersConstants.UserDontExists);
     }
-
-    public async Task UserIdShouldBeExistsWhenSelected(int id)
+    
+    public async Task UserShouldBeExistsWhenSelected(int userId)
     {
-        bool doesExist = await _userRepository.AnyAsync(predicate: u => u.Id == id);
-        if (doesExist)
-            await throwBusinessException(UsersMessages.UserDontExists);
+        bool doesExists = await _userRepository.AnyAsync(predicate: u => u.Id ==userId);
+        if (!doesExists)
+            await throwBusinessException(UsersConstants.UserDontExists);
     }
+ 
 
     public async Task UserPasswordShouldBeMatched(User user, string password)
     {
         if (!HashingHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            await throwBusinessException(UsersMessages.PasswordDontMatch);
+            await throwBusinessException(UsersConstants.PasswordDontMatch);
     }
 
     public async Task UserEmailShouldNotExistsWhenInsert(string email)
     {
         bool doesExists = await _userRepository.AnyAsync(predicate: u => u.Email == email);
         if (doesExists)
-            await throwBusinessException(UsersMessages.UserMailAlreadyExists);
+            await throwBusinessException(UsersConstants.UserMailAlreadyExists);
     }
 
     public async Task UserEmailShouldNotExistsWhenUpdate(int id, string email)
     {
         bool doesExists = await _userRepository.AnyAsync(predicate: u => u.Id != id && u.Email == email);
         if (doesExists)
-            await throwBusinessException(UsersMessages.UserMailAlreadyExists);
+            await throwBusinessException(UsersConstants.UserMailAlreadyExists);
     }
 }

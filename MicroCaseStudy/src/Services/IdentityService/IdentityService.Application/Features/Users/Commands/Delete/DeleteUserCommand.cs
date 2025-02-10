@@ -2,8 +2,8 @@ using AutoMapper;
 using Core.Application.Enums;
 using Core.Application.Responses;
 using Core.WebAPI.Appsettings;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.Users.Queries.GetList;
 using IdentityService.Application.Features.Users.Rules;
 using IdentityService.Domain.Entities;
@@ -44,7 +44,7 @@ public class DeleteUserCommand: IRequest<Response<DeletedUserDto>>
 
             DeletedUserDto dto = _mapper.Map<DeletedUserDto>(user);
             return _baseService.CreateSuccessResult<DeletedUserDto>(null,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

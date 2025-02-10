@@ -10,22 +10,35 @@ namespace IdentityService.Persistance.Repositories;
 public class RefreshTokenRepository : EfRepositoryBase<RefreshToken, IdentityServiceDbContext, int>,
     IRefreshTokenRepository
 {
+    private readonly IUserSession<int> _userSession;
     public RefreshTokenRepository(IdentityServiceDbContext context, IUserSession<int> userSession) : base(context,
         userSession)
     {
+        _userSession = userSession;
     }
-
-    public async Task<List<RefreshToken>> GetOldRefreshTokensAsync(int userId)
+ 
+    public async Task DeleteOldRefreshTokensAsync(bool all,int userId)
     {
-        List<RefreshToken> tokens = await Query()
+        await Query()
             .AsNoTracking()
             .Where(r =>
                 r.UserId == userId &&
                 r.IsActive == true &&
-                r.IsDeleted == false
+                r.IsDeleted == false &&
+                (
+                    all || 
+                    (
+                        !all &&
+                        r.ExpiresDate < DateTime.UtcNow
+                    )
+                )
             )
-            .ToListAsync();
-
-        return tokens;
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(u => u.IsActive, false)
+                .SetProperty(u => u.IsDeleted, true)
+                .SetProperty(u => u.UpdatedAt, DateTime.UtcNow)
+                .SetProperty(u => u.UpdatedBy, _userSession.UserId)
+            );
+ 
     }
 }

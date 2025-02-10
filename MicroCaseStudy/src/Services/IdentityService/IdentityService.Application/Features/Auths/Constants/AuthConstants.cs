@@ -1,6 +1,6 @@
 namespace IdentityService.Application.Features.Auths.Constants;
 
-public static class AuthMessages
+public static class AuthConstants
 {
 
     public const string EmailActivationKeyDontExists = "E-posta Aktivasyon Anahtarı bulunmuyor.";

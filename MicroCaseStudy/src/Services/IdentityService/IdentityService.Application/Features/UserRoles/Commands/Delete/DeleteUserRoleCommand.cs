@@ -2,10 +2,10 @@ using System.Text.Json.Serialization;
 using AutoMapper;
 using Core.Application.Enums;
 using Core.Redis.MediaR;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.UserRoles.Rules;
-using IdentityService.Application.Manager.AuthManager;
+using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
 using MediatR;
 
@@ -28,14 +28,14 @@ public class DeleteUserRoleCommand : IRequest<Response<DeletedUserRoleDto>>, IJw
         private readonly UserRoleBusinessRules _userRoleBusinessRules;
         private readonly IJwtRemoveRedisCachableRequest _jwtRemoveRedisCachableRequest;
         private readonly IBaseService _baseService; 
-        private readonly IAuthManager _authManager;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
         public DeleteUserRoleCommandHandler(
             IUserRoleRepository userRoleRepository,
             IMapper mapper,
             UserRoleBusinessRules userRoleBusinessRules,
             IJwtRemoveRedisCachableRequest jwtRemoveRedisCachableRequest,
             IBaseService baseService,
-            IAuthManager authManager
+            IRefreshTokenRepository refreshTokenRepository
             
         )
         {
@@ -44,7 +44,7 @@ public class DeleteUserRoleCommand : IRequest<Response<DeletedUserRoleDto>>, IJw
             _userRoleBusinessRules = userRoleBusinessRules;
             _jwtRemoveRedisCachableRequest= jwtRemoveRedisCachableRequest;
             _baseService = baseService;
-            _authManager = authManager;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<Response<DeletedUserRoleDto>> Handle(
@@ -52,7 +52,7 @@ public class DeleteUserRoleCommand : IRequest<Response<DeletedUserRoleDto>>, IJw
             CancellationToken cancellationToken
         )
         {
-            Domain.Entities.UserRole? userRole = await _userRoleRepository.GetAsync(
+            UserRole? userRole = await _userRoleRepository.GetAsync(
                 predicate: uoc => uoc.Id.Equals(request.Id),
                 cancellationToken: cancellationToken
             );
@@ -68,10 +68,10 @@ public class DeleteUserRoleCommand : IRequest<Response<DeletedUserRoleDto>>, IJw
             _jwtRemoveRedisCachableRequest.UserId =userRole?.UserId.ToString();
             _jwtRemoveRedisCachableRequest.IsDeletedUserAll = true;
             
-            await _authManager.DeleteAllRefreshTokensByUserId(userRole.UserId);
+            await _refreshTokenRepository.DeleteOldRefreshTokensAsync(true,userRole.UserId);
             
             return _baseService.CreateSuccessResult<DeletedUserRoleDto>(dto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
  

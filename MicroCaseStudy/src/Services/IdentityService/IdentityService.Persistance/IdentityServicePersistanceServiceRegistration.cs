@@ -13,7 +13,6 @@ public static class IdentityServicePersistanceServiceRegistration
      public static IServiceCollection AddIdentityServicePersistanceServiceRegistration(this IServiceCollection service,
         IConfiguration configuration)
      {
-         var a = configuration.GetConnectionString("IdentityService");
         service.AddDbContext<IdentityServiceDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("IdentityService")));
 
         service.AddCoreWebAPIAppsettingServiceRegistration();

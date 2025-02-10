@@ -3,10 +3,10 @@ using Core.Mailing;
 using Core.Redis.Helpers;
 using Core.Security.EmailAuthenticator;
 using Core.WebAPI.Appsettings;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
 using IdentityService.Application.Features.Auths.Commands.Redis;
 using IdentityService.Application.Features.Auths.Rules;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Manager.UserManager;
 using IdentityService.Domain.Entities;
 using MediatR;
@@ -83,7 +83,7 @@ public class ResetPasswordCommand : IRequest<Response<string>>
             );
 
             return _baseService.CreateSuccessResult<string>(string.Empty,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

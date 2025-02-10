@@ -1,8 +1,8 @@
 using AutoMapper;
 using Core.Application.Enums;
 using Core.CrossCuttingConcerns.Exceptions.Types;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.Roles.Rules;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
@@ -64,7 +64,7 @@ public class DeleteRoleCommand : IRequest<Response<DeletedRoleDto>>
             DeletedRoleDto dto = _mapper.Map<DeletedRoleDto>(role);
 
             return _baseService.CreateSuccessResult<DeletedRoleDto>(dto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }

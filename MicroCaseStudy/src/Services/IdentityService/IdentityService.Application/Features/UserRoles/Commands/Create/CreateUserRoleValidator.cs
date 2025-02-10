@@ -6,7 +6,7 @@ public class CreateUserRoleValidator: AbstractValidator<CreateUserRoleCommand>
 {
     public CreateUserRoleValidator()
     {
-        RuleFor(c => c.UserId).NotNull();
+        RuleFor(c => c.ReqUserId).NotNull();
         RuleFor(c => c.RoleId).GreaterThan(0);
     }
 }

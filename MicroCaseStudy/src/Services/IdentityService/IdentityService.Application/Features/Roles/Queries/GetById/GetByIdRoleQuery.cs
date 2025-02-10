@@ -1,6 +1,6 @@
 using AutoMapper;
+using Core.WebAPI.Appsettings.Constants;
 using Core.WebAPI.Appsettings.Wrappers;
-using IdentityService.Application.Features.Internals.Constants;
 using IdentityService.Application.Features.Roles.Rules;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
@@ -46,7 +46,7 @@ public class GetByIdRoleQuery: IRequest<Response< GetByIdRoleDto>>
 
             GetByIdRoleDto dto = _mapper.Map<GetByIdRoleDto>(role);
             return _baseService.CreateSuccessResult<GetByIdRoleDto>(dto,
-                InternalsMessages.Success);
+                InternalsConstants.Success);
         }
     }
 }
