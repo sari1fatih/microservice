@@ -157,6 +157,71 @@ public class CustomerServiceDbContext:DbContext
     
      protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
+        #region SeedData
+            #region Customer
+                 modelBuilder.Entity<Customer>()
+                    .HasData(
+                        new Customer()
+                        {
+                            Id = 1, 
+                            Name = "Ayşe",
+                            Surname = "Fatma", 
+                            Email = "ayse@gmail.com", 
+                            Phone = "12345134", 
+                            Company = "Nasa", 
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedBy = 1,
+                            IsActive = true,
+                            IsDeleted = false,
+                            CreatedAt = DateTime.UtcNow
+                        } ,
+                        new Customer()
+                        {
+                            Id = 2, 
+                            Name = "Hakkı",
+                            Surname = "Hakyemez", 
+                            Email = "hakkı@gmail.com", 
+                            Phone = "12123345134", 
+                            Company = "Tesla", 
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedBy = 1,
+                            IsActive = true,
+                            IsDeleted = false,
+                            CreatedAt = DateTime.UtcNow
+                        } 
+                    );
+            #endregion 
+            
+            #region Customer
+            modelBuilder.Entity<CustomerNote>()
+                .HasData(
+                    new CustomerNote()
+                    {
+                        Id = 1, 
+                        Customerid = 1,
+                        Note = "Önemli Müşteri",
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedBy = 1,
+                        IsActive = true,
+                        IsDeleted = false,
+                        CreatedAt = DateTime.UtcNow
+                    } ,
+                    new CustomerNote()
+                    {
+                        Id = 2, 
+                        Customerid = 2,
+                        Note = "Çok daha önemli Müşteri",
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedBy = 1,
+                        IsActive = true,
+                        IsDeleted = false,
+                        CreatedAt = DateTime.UtcNow
+                    } 
+                );
+            #endregion 
+        #endregion 
+        
         #region GlobalFilter
 
         modelBuilder.Entity<Customer>()
@@ -236,8 +301,8 @@ public class CustomerServiceDbContext:DbContext
         });
         #endregion
 
-        modelBuilder.HasSequence("CustomerNoteSeq");
-        modelBuilder.HasSequence("CustomerSeq");
+        modelBuilder.HasSequence("CustomerNoteSeq").StartsAt(3);
+        modelBuilder.HasSequence("CustomerSeq").StartsAt(3);
 
         base.OnModelCreating(modelBuilder);
     }

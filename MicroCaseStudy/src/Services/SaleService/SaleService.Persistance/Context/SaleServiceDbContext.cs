@@ -161,6 +161,67 @@ public class SaleServiceDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region SeedData
+            #region ParameterGroup
+                modelBuilder.Entity<ParameterGroup>()
+                    .HasData(
+                        new ParameterGroup()
+                        {
+                            Id = 1,
+                            ParameterGroupValue = "Satış Durumu",
+                            RecordGuid = Guid.NewGuid(),
+                            IsActive = true,
+                            IsDeleted = false,
+                        }
+                    );
+            
+            #endregion
+            
+            #region Parameter
+                modelBuilder.Entity<Parameter>()
+                    .HasData(
+                        new Parameter()
+                        {
+                            Id = 1,
+                            ParameterValue = "Yeni",
+                            ParameterGroupId =  1, 
+                            RecordGuid = Guid.NewGuid(),
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new Parameter()
+                        {
+                            Id = 2,
+                            ParameterValue = "İletişimde",
+                            ParameterGroupId =  1, 
+                            RecordGuid = Guid.NewGuid(),
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new Parameter()
+                        {
+                            Id = 3,
+                            ParameterValue = "Anlaşma",
+                            ParameterGroupId =  1, 
+                            RecordGuid = Guid.NewGuid(),
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new Parameter()
+                        {
+                            Id = 4,
+                            ParameterValue = "Kapandı",
+                            ParameterGroupId =  1, 
+                            RecordGuid = Guid.NewGuid(),
+                            IsActive = true,
+                            IsDeleted = false,
+                        }
+                    );
+            
+            #endregion
+            
+        #endregion
+        
         #region GlobalFilter
 
         modelBuilder.Entity<Parameter>()
@@ -349,8 +410,8 @@ public class SaleServiceDbContext : DbContext
 
         #endregion
 
-        modelBuilder.HasSequence("ParameterGroupSeq");
-        modelBuilder.HasSequence("ParameterSeq");
+        modelBuilder.HasSequence("ParameterGroupSeq").StartsAt(4);
+        modelBuilder.HasSequence("ParameterSeq").StartsAt(5);
         modelBuilder.HasSequence("SaleDetailSeq");
         modelBuilder.HasSequence("SaleSeq");
 

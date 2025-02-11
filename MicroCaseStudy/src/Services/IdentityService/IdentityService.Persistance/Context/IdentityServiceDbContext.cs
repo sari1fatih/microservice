@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Core.CrossCuttingConcerns.Serilog;
+using Core.Security.Hashing;
 using Core.WebAPI.Appsettings;
 using IdentityService.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -21,11 +22,11 @@ public class IdentityServiceDbContext : DbContext
     private readonly string _queryParams;
     private readonly WebApiConfiguration _webApiConfiguration;
 
-    public IdentityServiceDbContext(DbContextOptions<IdentityServiceDbContext> options,  IConfiguration configuration,
-            IHttpContextAccessor httpContextAccessor,
-            LoggerServiceBase loggerServiceBase,
-            IUserSession<int> userSession,
-            IOptions<WebApiConfiguration> webApiConfiguration)
+    public IdentityServiceDbContext(DbContextOptions<IdentityServiceDbContext> options, IConfiguration configuration,
+        IHttpContextAccessor httpContextAccessor,
+        LoggerServiceBase loggerServiceBase,
+        IUserSession<int> userSession,
+        IOptions<WebApiConfiguration> webApiConfiguration)
         : base(options)
     {
         _configuration = configuration;
@@ -41,7 +42,8 @@ public class IdentityServiceDbContext : DbContext
             : "No Query Parameters";
         _webApiConfiguration = webApiConfiguration.Value;
     }
-   private void Log()
+
+    private void Log()
     {
         var modifiedEntries = ChangeTracker.Entries()
             .Where(x => x.State == EntityState.Modified || x.State == EntityState.Deleted ||
@@ -126,6 +128,7 @@ public class IdentityServiceDbContext : DbContext
             }
         }
     }
+
     public override int SaveChanges()
     {
         if (!_webApiConfiguration.ExcludedPaths.Any(x => x == _userSession.Path))
@@ -141,7 +144,7 @@ public class IdentityServiceDbContext : DbContext
 
         return base.SaveChangesAsync(cancellationToken);
     }
-    
+
     #region Info Table
 
     public virtual DbSet<Log> Logs { get; set; }
@@ -156,13 +159,221 @@ public class IdentityServiceDbContext : DbContext
 
     #endregion
 
-    
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql(_configuration.GetConnectionString("IdentityService"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region SeedData
+
+            #region User
+
+            HashingHelper.CreatePasswordHash(
+                "test",
+                passwordHash: out byte[] passwordHash,
+                passwordSalt: out byte[] passwordSalt
+            );
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new User()
+                    {
+                        Id = 1,
+                        Username = "sari1fatih",
+                        Email = "fatihsari1992@gmail.com",
+                        Name = "Fatih",
+                        Surname = "Sarı",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        IsDeleted = false,
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Username = "gorkan1tahir",
+                        Email = "tahirgorkan@gmail.com",
+                        Name = "Tahir",
+                        Surname = "Görkan",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        IsDeleted = false,
+                    },
+                    new User()
+                    {
+                        Id = 3,
+                        Username = "adıguzel1utkan",
+                        Email = "utkan@gmail.com",
+                        Name = "Utkan",
+                        Surname = "Adıgüzel",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        IsDeleted = false,
+                    },
+                    new User()
+                    {
+                        Id = 4,
+                        Username = "acar1kutay",
+                        Email = "kutay@gmail.com",
+                        Name = "Kutay",
+                        Surname = "Acar",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        IsDeleted = false,
+                    },
+                    new User()
+                    {
+                        Id = 5,
+                        Username = "behlul1enes",
+                        Email = "enes@gmail.com",
+                        Name = "Enes",
+                        Surname = "Behlül",
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RecordGuid = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true,
+                        IsDeleted = false,
+                    }
+                );
+
+            #endregion
+            
+            #region Role
+                modelBuilder.Entity<Role>()
+                    .HasData(
+                        new Role()
+                        {
+                            Id = 1,
+                            RoleValue = "Admin",
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new Role()
+                        {
+                            Id = 2,
+                            RoleValue = "User",
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        }
+                    );
+            #endregion
+            
+            #region UserRole
+            
+                modelBuilder.Entity<UserRole>()
+                    .HasData(
+                        new UserRole()
+                        {
+                            Id = 1,
+                            RoleId = 1,
+                            UserId = 1,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 2,
+                            RoleId = 2,
+                            UserId = 1,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 3,
+                            RoleId = 1,
+                            UserId = 2,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 4,
+                            RoleId = 2,
+                            UserId = 2,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 5,
+                            RoleId = 1,
+                            UserId = 3,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 6,
+                            RoleId = 2,
+                            UserId =3,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 7,
+                            RoleId = 1,
+                            UserId = 4,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        },
+                        new UserRole()
+                        {
+                            Id = 8,
+                            RoleId = 2,
+                            UserId = 4,
+                            CreatedBy = 1,
+                            RecordGuid = Guid.NewGuid(),
+                            CreatedAt = DateTime.UtcNow,
+                            IsActive = true,
+                            IsDeleted = false,
+                        }
+                    );
+            
+            
+            #endregion
+        #endregion
+
         #region GlobalFilter
 
         modelBuilder.Entity<Role>()
@@ -175,7 +386,7 @@ public class IdentityServiceDbContext : DbContext
 
         #region Creating Table
 
-       modelBuilder.Entity<Log>(entity =>
+        modelBuilder.Entity<Log>(entity =>
         {
             entity
                 .HasNoKey()
@@ -406,14 +617,13 @@ public class IdentityServiceDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("userroles_users_user_id_fk");
         });
-     
 
         #endregion
 
         modelBuilder.HasSequence("RefreshTokenSeq");
-        modelBuilder.HasSequence("RoleSeq");
-        modelBuilder.HasSequence("UserRoleSeq");
-        modelBuilder.HasSequence("UserSeq");
+        modelBuilder.HasSequence("RoleSeq").StartsAt(3);
+        modelBuilder.HasSequence("UserRoleSeq").StartsAt(9);
+        modelBuilder.HasSequence("UserSeq").StartsAt(6);
 
         base.OnModelCreating(modelBuilder);
     }
