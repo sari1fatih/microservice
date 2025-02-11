@@ -1,0 +1,187 @@
+{
+  "Routes": [
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/Login",
+      "UpstreamPathTemplate": "/Auths/Login",
+      "UpstreamHttpMethod": [
+        "Post"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/Register",
+      "UpstreamPathTemplate": "/Auths/Register",
+      "UpstreamHttpMethod": [
+        "Post"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/VerifyRegister",
+      "UpstreamPathTemplate": "/Auths/VerifyRegister",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/RefreshToken",
+      "UpstreamPathTemplate": "/Auths/RefreshToken",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/RevokeToken",
+      "UpstreamPathTemplate": "/Auths/RevokeToken",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/ResetPassword",
+      "UpstreamPathTemplate": "/Auths/ResetPassword",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/VerifyResetPassword",
+      "UpstreamPathTemplate": "/Auths/VerifyResetPassword",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Roles/{id}",
+      "UpstreamPathTemplate": "/Roles/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Roles/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/Roles/GetList",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Roles/AddRole",
+      "UpstreamPathTemplate": "/Roles/AddRole",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Roles/UpdateRole",
+      "UpstreamPathTemplate": "/Roles/UpdateRole",
+      "UpstreamHttpMethod": [
+        "Put"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Roles",
+      "UpstreamPathTemplate": "/Roles",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Users/{id}",
+      "UpstreamPathTemplate": "/Users/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Users/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/Users/GetList",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Users",
+      "UpstreamPathTemplate": "/Users",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/UserRoles/{id}",
+      "UpstreamPathTemplate": "/UserRoles/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/UserRoles/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/UserRoles/GetList",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/UserRoles/AddUserRole",
+      "UpstreamPathTemplate": "/UserRoles/AddUserRole",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/UserRoles",
+      "UpstreamPathTemplate": "/UserRoles",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ]
+    }
+  ]
+}

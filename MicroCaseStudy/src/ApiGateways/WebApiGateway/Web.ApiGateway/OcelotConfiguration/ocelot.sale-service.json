@@ -1,0 +1,84 @@
+{
+  "Routes": [
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/ParameterGroups/{id}",
+      "UpstreamPathTemplate": "/ParameterGroups/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/ParameterGroups/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/ParameterGroups/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/Parameters/{id}",
+      "UpstreamPathTemplate": "/Parameters/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/Parameters/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/Parameters/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/SaleDetails/{id}",
+      "UpstreamPathTemplate": "/SaleDetails/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/SaleDetails/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}",
+        "saleId": "{?saleId}"
+      },
+      "UpstreamPathTemplate": "/SaleDetails/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/SaleDetails/AddSaleDetail",
+      "UpstreamPathTemplate": "/SaleDetails/AddSaleDetail",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/Sales/{id}",
+      "UpstreamPathTemplate": "/Sales/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "sale-service",
+      "SwaggerKey": "sale-service",
+      "DownstreamPathTemplate": "/api/Sales/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/Sales/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    }
+  ]
+}

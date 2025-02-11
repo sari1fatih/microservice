@@ -3,10 +3,6 @@ using IdentityService.Bootstrapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IConfiguration configuration;
-ConfigureHostBuilder configureHostBuilder;
-IWebHostEnvironment environment;
-
 IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false)
@@ -14,18 +10,29 @@ IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
     .AddEnvironmentVariables();
 // Add services to the container.
 
+IConfiguration configuration;
+ConfigureHostBuilder configureHostBuilder;
+IWebHostEnvironment environment;
+
+
+
+builder.Host.UseDefaultServiceProvider((context, options) =>
+{
+    options.ValidateOnBuild = false;
+    options.ValidateScopes = false;
+});
+
 environment = builder.Environment;
 configureHostBuilder = builder.Host;
 configuration = configurationBuilder.Build();
 
 
-builder.Services.AddIdentityServiceBootstrapperServiceRegistration(configuration);
-
+builder.Services.AddIdentityServiceBootstrapperServiceRegistration(configuration); 
 
 var app = builder.Build();
 
 app.AddIdentityServiceApiBuilderRegistration(app.Environment, configuration);
 
 app.MapControllers();
-
+ 
 app.Run();

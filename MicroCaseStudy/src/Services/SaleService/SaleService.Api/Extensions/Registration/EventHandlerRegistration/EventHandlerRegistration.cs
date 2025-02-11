@@ -1,15 +1,14 @@
-﻿using SaleService.Api.IntegrationEvents.EventHandlers;
+using SaleService.Api.IntegrationEvents.EventHandlers;
 
-namespace SaleService.Api.Extensions.Registration.EventHandlerRegistration
+namespace SaleService.Api.Extensions.Registration.EventHandlerRegistration;
+
+public static class EventHandlerRegistration
 {
-    public static class EventHandlerRegistration
+    public static IServiceCollection AddConfigureEventHandlers(this IServiceCollection services)
     {
-        public static IServiceCollection AddConfigureEventHandlers(this IServiceCollection services)
-        {
-            services.AddScoped<SaleCreatedIntegrationEventHandler>();
-            services.AddScoped<CustomerCreatedIntegrationEventHandler>();
+        services.AddScoped<SaleCreatedIntegrationEventHandler>();
+        services.AddScoped<CustomerCreatedIntegrationEventHandler>();
 
-            return services;
-        }
+        return services;
     }
 }

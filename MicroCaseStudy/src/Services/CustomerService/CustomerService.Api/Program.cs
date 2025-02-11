@@ -17,10 +17,16 @@ IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
     .AddEnvironmentVariables();
 // Add services to the container.
 
+builder.Host.UseDefaultServiceProvider((context, options) =>
+{
+    options.ValidateOnBuild = false;
+    options.ValidateScopes = false;
+});
 environment = builder.Environment;
 configureHostBuilder = builder.Host;
 configuration = configurationBuilder.Build();
 
+ 
 builder.Services.AddSingleton<IEventBus>(sp =>
 {
     EventBusConfig config = new()
@@ -39,5 +45,6 @@ var app = builder.Build();
 app.AddCustomerServiceApiBuilderRegistration(app.Environment, configuration);
 
 app.MapControllers();
+ 
 
 app.Run();

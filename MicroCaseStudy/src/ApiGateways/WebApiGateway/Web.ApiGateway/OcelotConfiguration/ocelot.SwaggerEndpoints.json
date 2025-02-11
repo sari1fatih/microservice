@@ -1,0 +1,43 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "identity-service",
+      "Config": [
+        {
+          "Name": "Identity Service API",
+          "Version": "v1",
+          "Service": {
+            "Name": "identity-service",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "sale-service",
+      "Config": [
+        {
+          "Name": "Sale Service API",
+          "Version": "v1",
+          "Service": {
+            "Name": "sale-service",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "customer-service",
+      "Config": [
+        {
+          "Name": "Customer Service API",
+          "Version": "v1",
+          "Service": {
+            "Name": "customer-service",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    }
+  ]
+}

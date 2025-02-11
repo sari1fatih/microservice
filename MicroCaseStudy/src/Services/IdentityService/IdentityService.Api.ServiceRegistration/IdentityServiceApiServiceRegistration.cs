@@ -175,8 +175,7 @@ public static class IdentityServiceApiServiceRegistration
                     new string[] { }
                 }
             });
-        });
- 
+        }); 
         services.AddAuthorization(options =>
         {
             options.AddPolicy("TokenAuthorizationHandler",

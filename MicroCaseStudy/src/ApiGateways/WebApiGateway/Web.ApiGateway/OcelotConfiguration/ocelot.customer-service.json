@@ -1,0 +1,89 @@
+{
+  "Routes": [
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/CustomerNotes/{id}",
+      "UpstreamPathTemplate": "/CustomerNotes/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/CustomerNotes/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/CustomerNotes/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/CustomerNotes/AddCustomerNote",
+      "UpstreamPathTemplate": "/CustomerNotes/AddCustomerNote",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/CustomerNotes/UpdateCustomerNote",
+      "UpstreamPathTemplate": "/CustomerNotes/UpdateCustomerNote",
+      "UpstreamHttpMethod": ["PUT"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/CustomerNotes",
+      "UpstreamPathTemplate": "/CustomerNotes",
+      "UpstreamHttpMethod": ["DELETE"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers/{id}",
+      "UpstreamPathTemplate": "/Customers/{id}",
+      "UpstreamHttpMethod": ["GET"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers/GetList",
+      "DownstreamQueryParams": {
+        "PageIndex": "{?PageIndex}",
+        "PageSize": "{?PageSize}"
+      },
+      "UpstreamPathTemplate": "/Customers/GetList",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers/StartSale",
+      "UpstreamPathTemplate": "/Customers/StartSale",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers/AddCustomer",
+      "UpstreamPathTemplate": "/Customers/AddCustomer",
+      "UpstreamHttpMethod": ["POST"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers/UpdateCustomer",
+      "UpstreamPathTemplate": "/Customers/UpdateCustomer",
+      "UpstreamHttpMethod": ["PUT"]
+    },
+    {
+      "ServiceName": "customer-service",
+      "SwaggerKey": "customer-service",
+      "DownstreamPathTemplate": "/api/Customers",
+      "UpstreamPathTemplate": "/Customers",
+      "UpstreamHttpMethod": ["DELETE"]
+    }
+  ]
+}

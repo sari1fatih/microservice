@@ -1,3 +1,4 @@
+Web.ApiGateway		-> http://localhost:5001
 
 IdentityService.Api		-> http://localhost:5001
 CustomerService.Api		-> http://localhost:5002

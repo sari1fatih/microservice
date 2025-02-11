@@ -24,9 +24,12 @@ environment = builder.Environment;
 builder.Host.UseDefaultServiceProvider((context, options) =>
 {
     options.ValidateOnBuild = false;
+    options.ValidateScopes = false;
 });
 configureHostBuilder = builder.Host;
 configuration = configurationBuilder.Build();
+ 
+
 builder.Services.AddConfigureEventHandlers();
 
 builder.Services.AddSingleton(sp =>
@@ -49,6 +52,8 @@ var app = builder.Build();
 app.AddSaleServiceApiBuilderRegistration(app.Environment, configuration);
 
 app.MapControllers(); 
+ 
+
 var eventBus = app.Services.GetRequiredService<IEventBus>();
 
 eventBus.Subscribe<SaleCreatedIntegrationEvent, SaleCreatedIntegrationEventHandler>();
