@@ -1,8 +1,7 @@
 using Core.Api.Controllers;
 using Core.Application.Requests;
-using Core.Application.Responses;
 using Core.Persistance.Dynamic;
-using IdentityService.Application.Features.Users.Commands.Delete;
+using IdentityService.Api.Attributes;
 using IdentityService.Application.Features.Users.Commands.Update;
 using IdentityService.Application.Features.Users.Queries.GetById;
 using IdentityService.Application.Features.Users.Queries.GetList;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace IdentityService.Api.Controllers
 {
+    [ElasticsearchRequestResponse]
     [Authorize(Policy = "TokenAuthorizationHandler")]
     [EnableRateLimiting("RateLimitUserId")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 

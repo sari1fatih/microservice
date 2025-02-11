@@ -1,6 +1,7 @@
 using Core.Api.Controllers;
 using Core.Application.Requests;
 using Core.Persistance.Dynamic;
+using IdentityService.Api.Attributes;
 using IdentityService.Application.Features.Roles.Commands.Create;
 using IdentityService.Application.Features.Roles.Commands.Delete;
 using IdentityService.Application.Features.Roles.Commands.Update;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace IdentityService.Api.Controllers;
 
+[ElasticsearchRequestResponse]
 [Authorize(Policy = "TokenAuthorizationHandler")]
 [EnableRateLimiting("RateLimitUserId")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 

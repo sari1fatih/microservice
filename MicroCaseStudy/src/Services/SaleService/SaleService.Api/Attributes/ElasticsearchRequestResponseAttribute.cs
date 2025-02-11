@@ -7,9 +7,9 @@ using Core.WebAPI.Appsettings.Elasticsearch;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 
-namespace CustomerService.Api.Attributes;
+namespace SaleService.Api.Attributes;
 
-public  class ElasticsearchRequestResponseAttribute : ActionFilterAttribute
+public class ElasticsearchRequestResponseAttribute : ActionFilterAttribute
 {
     public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
@@ -64,7 +64,7 @@ public  class ElasticsearchRequestResponseAttribute : ActionFilterAttribute
 
                 await elasticSearch.InsertAsync(new ElasticSearchInsertUpdateModel(
                     Activity.Current?.Id,
-                    ElasticsearchIndex.CustomerServiceIndexName,
+                    ElasticsearchIndex.SaleServiceIndexName,
                     elasticsearchLog
                 ));
             }

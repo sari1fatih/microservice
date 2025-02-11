@@ -20,6 +20,7 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityService.Api.Controllers
 {
+    [ElasticsearchRequestResponse]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthsController : BaseController
@@ -62,7 +63,7 @@ namespace IdentityService.Api.Controllers
         
         
         [EnableRateLimiting("RateLimitIp")]
-        [ElasticsearchRequestResponse]
+       
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {

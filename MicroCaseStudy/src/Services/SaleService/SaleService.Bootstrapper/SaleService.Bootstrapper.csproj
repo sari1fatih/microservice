@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SaleService.Api.ServiceRegistration\SaleService.Api.ServiceRegistration.csproj" />
+      <ProjectReference Include="..\SaleService.Application\SaleService.Application.csproj" />
+      <ProjectReference Include="..\SaleService.Persistance\SaleService.Persistance.csproj" />
+    </ItemGroup>
+
+</Project>

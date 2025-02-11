@@ -45,13 +45,14 @@ public class CustomersController : BaseController
     {
         return Ok(await Mediator.Send(createCustomerCommand));
     }
-    
+    /*Rabbit mq istek atıcak*/
     [HttpPut("UpdateCustomer")]
     public async Task<IActionResult> UpdateCustomer(
         [FromBody] UpdateCustomerCommand updateCustomerCommand)
     {
         return Ok(await Mediator.Send(updateCustomerCommand));
     }
+    /*Rabbit mq istek atıcak*/
     [HttpDelete()]
     public async Task<IActionResult> DeleteCustomer(
         [FromBody] DeleteCustomerCommand deleteCustomerCommand)

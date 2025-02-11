@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Cores\Core.Application\Core.Application.csproj" />
+      <ProjectReference Include="..\..\..\Cores\Core.Persistance\Core.Persistance.csproj" />
+      <ProjectReference Include="..\SaleService.Domain\SaleService.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
