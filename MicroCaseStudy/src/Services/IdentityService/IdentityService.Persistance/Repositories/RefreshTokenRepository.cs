@@ -1,4 +1,5 @@
 using Core.Persistance.Repository;
+using Core.Redis.Dtos;
 using Core.WebAPI.Appsettings;
 using IdentityService.Domain.Entities;
 using IdentityService.Persistance.Abstract.Repositories;
@@ -16,7 +17,20 @@ public class RefreshTokenRepository : EfRepositoryBase<RefreshToken, IdentitySer
     {
         _userSession = userSession;
     }
- 
+
+    public async Task<List<JwtRedisDto>> GetListForRedis()
+    {
+        var jwtRedisDtos = await Query().AsNoTracking().Where(rt => rt.IsActive && !rt.IsDeleted && rt.ExpiresDate > 
+                DateTime.UtcNow)
+            .GroupBy(rt => rt.UserId).Select(g => new JwtRedisDto
+            {
+                UserId = g.Key.ToString(),
+                JwtExpireDateDtos = g.Select(rt => new JwtExpireDateDto { Jwt = rt.Jti, ExpiresDate = rt.ExpiresDate })
+                    .ToList()
+            }).ToListAsync(); 
+        
+        return jwtRedisDtos;
+    }
     public async Task DeleteOldRefreshTokensAsync(bool all,int userId)
     {
         await Query()

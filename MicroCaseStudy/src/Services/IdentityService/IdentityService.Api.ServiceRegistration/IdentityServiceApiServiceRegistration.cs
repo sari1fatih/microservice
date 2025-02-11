@@ -1,9 +1,15 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.RateLimiting;
+using Core.Hangfire.Managers;
+using Core.Hangfire.Settings;
 using Core.Security.JWT;
 using Core.WebAPI.Appsettings;
+using Hangfire;
+using Hangfire.PostgreSql;
+using IdentityService.Api.ServiceRegistration.BackgroundJobs;
 using IdentityService.Api.ServiceRegistration.Handlers;
+using IdentityService.Application.BackgroundJobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +48,29 @@ public static class IdentityServiceApiServiceRegistration
 
         services.AddStackExchangeRedisCache(opt =>
             opt.Configuration = redisConfigurations?.ConnectionString ?? string.Empty);
+        
+        var hangfireSettings = configuration.GetSection(nameof(HangfireSettings)).Get<HangfireSettings>();
+        PostgreSqlStorageOptions option = new PostgreSqlStorageOptions
+        {
+            PrepareSchemaIfNecessary = true,
+            SchemaName = "hangfire",
+            UseNativeDatabaseTransactions = true,
+        };
+
+        services.AddHangfire(config =>
+        {
+            config.UsePostgreSqlStorage(hangfireSettings?.ConnectionString, option)
+                .WithJobExpirationTimeout(TimeSpan.FromHours(6));
+        });
+        
+        services.AddScoped<IActiveRefreshTokenSetRedisServiceBackgroundJobWorker, ActiveRefreshTokenSetRedisServiceBackgroundJobWorker>();
+        JobStorage.Current = new PostgreSqlStorage(hangfireSettings?.ConnectionString, option);
+        services.AddHangfireServer(ser =>
+        {
+            ser.HeartbeatInterval = TimeSpan.FromHours(10);
+            ser.Queues = new[] { "set-active-refresh-token" };
+            services.AddBackgroundJob<IActiveRefreshTokenSetRedisServiceBackgroundJobWorker, ActiveRefreshTokenSetRedisServiceBackgroundJobWorker>();
+        });
         
         services.AddHttpContextAccessor();
         

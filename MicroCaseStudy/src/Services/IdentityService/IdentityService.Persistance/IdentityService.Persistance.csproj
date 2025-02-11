@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Core.Redis\Core.Redis.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj" />
       <ProjectReference Include="..\IdentityService.Domain\IdentityService.Domain.csproj" />
       <ProjectReference Include="..\IdentityService.Persistance.Abstract\IdentityService.Persistance.Abstract.csproj" />

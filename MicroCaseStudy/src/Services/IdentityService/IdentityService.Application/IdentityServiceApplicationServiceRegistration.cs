@@ -17,6 +17,7 @@ using Core.Security.JWT;
 using Core.WebAPI.Appsettings;
 using FluentValidation;
 using IdentityService.Application.Manager.AuthManager;
+using IdentityService.Application.Manager.RefreshTokenManager;
 using IdentityService.Application.Manager.RoleManager;
 using IdentityService.Application.Manager.UserManager;
 using IdentityService.Application.Manager.UserRoleManager;
@@ -74,6 +75,7 @@ public static class IdentityServiceApplicationServiceRegistration
         services.AddScoped<IRoleManager, RoleManager>();
         services.AddScoped<IUserRoleManager, UserRoleManager>();
         services.AddScoped<IUserManager, UserManager>();
+        services.AddScoped<IRefreshTokenManager, RefreshTokenManager>();
         
         services.AddScoped<IUserSession<int>, UserSession<int>>();
         
