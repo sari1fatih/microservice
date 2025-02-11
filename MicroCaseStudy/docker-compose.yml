@@ -1,0 +1,27 @@
+services:
+  identityservice.api:
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: .
+      dockerfile: src/Services/IdentityService/IdentityService.Api/Dockerfile
+
+  saleservice.api:
+    image: ${DOCKER_REGISTRY-}saleserviceapi
+    build:
+      context: .
+      dockerfile: src/Services/SaleService/SaleService.Api/Dockerfile
+
+
+  customerservice.api:
+    image: ${DOCKER_REGISTRY-}customerserviceapi
+    build:
+      context: .
+      dockerfile: src/Services/CustomerService/CustomerService.Api/Dockerfile
+
+
+  web.apigateway:
+    image: ${DOCKER_REGISTRY-}webapigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/WebApiGateway/Web.ApiGateway/Dockerfile
+
