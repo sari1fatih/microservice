@@ -19,4 +19,10 @@
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Core.Redis">
+        <HintPath>..\..\Services\IdentityService\IdentityService.Api\bin\Debug\net8.0\Core.Redis.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

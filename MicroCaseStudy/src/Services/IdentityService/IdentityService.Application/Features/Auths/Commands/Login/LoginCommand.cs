@@ -1,8 +1,6 @@
 using System.Text.Json.Serialization;
 using AutoMapper;
 using Core.Application.Pipelines.Transaction;
-using Core.Redis.Constants;
-using Core.Redis.Dtos;
 using Core.Redis.Helpers;
 using Core.Redis.MediaR;
 using Core.Security.JWT.Dtos;

@@ -10,6 +10,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Core.Redis\Core.Redis.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Persistance\Core.Persistance.csproj" />
+      <ProjectReference Include="..\..\..\Cores\Core.Redis\Core.Redis.csproj" />
       <ProjectReference Include="..\IdentityService.Domain\IdentityService.Domain.csproj" />
     </ItemGroup>
 

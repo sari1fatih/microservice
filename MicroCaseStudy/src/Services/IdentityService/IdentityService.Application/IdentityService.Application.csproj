@@ -13,6 +13,7 @@
       <ProjectReference Include="..\..\..\Cores\Core.Hangfire\Core.Hangfire.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Mailing.MailKit\Core.Mailing.MailKit.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Mailing\Core.Mailing.csproj" />
+      <ProjectReference Include="..\..\..\Cores\Core.Redis\Core.Redis.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Security\Core.Security.csproj" />
       <ProjectReference Include="..\IdentityService.Domain\IdentityService.Domain.csproj" />
       <ProjectReference Include="..\IdentityService.Persistance.Abstract\IdentityService.Persistance.Abstract.csproj" />
