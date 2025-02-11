@@ -1,5 +1,8 @@
 using CustomerService.Api.ServiceRegistration;
 using CustomerService.Bootstrapper;
+using EventBus.Base;
+using EventBus.Base.Abstraction;
+using EventBus.Factory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +21,18 @@ environment = builder.Environment;
 configureHostBuilder = builder.Host;
 configuration = configurationBuilder.Build();
 
+builder.Services.AddSingleton<IEventBus>(sp =>
+{
+    EventBusConfig config = new()
+    {
+        ConnectionRetryCount = 5,
+        EventNameSuffix = "IntegrationEvent",
+        SubscriberClientAppName = "SaleService",
+        EventBusType = EventBusType.RabbitMQ
+    };
 
+    return EventBusFactory.Create(config, sp);
+});
 builder.Services.AddCustomerServiceBootstrapperServiceRegistration(configuration);
 var app = builder.Build();
 

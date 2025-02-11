@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -114,6 +115,12 @@ public static class CustomerServiceApiServiceRegistration
                 };
             });
 
+        services.AddLogging(configure =>
+        { 
+            configure.AddConsole();
+            configure.AddDebug();
+        });
+        
           services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo()

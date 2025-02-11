@@ -1,6 +1,7 @@
 using Core.Redis.Constants;
 using Core.Redis.Helpers;
 using IdentityService.Persistance.Abstract.Repositories;
+using Nest;
 
 namespace IdentityService.Application.Manager.RefreshTokenManager;
 
@@ -19,16 +20,16 @@ public class RefreshTokenManager : IRefreshTokenManager
 
     public async Task SetActiveRefreshTokenToRedis()
     {
-        var data = await _refreshTokenRepository.GetListForRedis();
+        var refreshTokens = await _refreshTokenRepository.GetListForRedis();
         
-        Parallel.ForEach(data, item =>
+        foreach (var item in refreshTokens)
         {
-            _distributedHelper.AddToCache(
+            await _distributedHelper.AddToCache(
                 RedisConstants.Jwt,
                 item.UserId,
                 item,
                 CancellationToken.None);
-        }); 
+        }
     }
 
     #endregion

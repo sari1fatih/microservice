@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SaleService.Api.ServiceRegistration.Handlers;
@@ -121,6 +122,12 @@ public static class SaleServiceApiServiceRegistration
                 };
             });
 
+        services.AddLogging(configure =>
+        { 
+            configure.AddConsole();
+            configure.AddDebug();
+        });
+        
           SwaggerGenServiceCollectionExtensions.AddSwaggerGen(services, c =>
         {
             SwaggerGenOptionsExtensions.SwaggerDoc(c, "v1", new OpenApiInfo()

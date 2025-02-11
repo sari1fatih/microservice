@@ -1,6 +1,8 @@
 using AutoMapper;
 using Core.Application.Responses;
 using Core.Persistance.Paging;
+using SaleService.Application.Features.Sales.Commands.CreateSale;
+using SaleService.Application.Features.Sales.Commands.UpdateSaleCustomer;
 using SaleService.Application.Features.Sales.Queries.GetById;
 using SaleService.Application.Features.Sales.Queries.GetList;
 using SaleService.Domain.Dtos.SaleDtos;
@@ -12,6 +14,13 @@ public class MappingProfiles: Profile
 {
     public MappingProfiles()
     {
+        CreateMap<UpdateSaleCustomerCommand, UpdateAllCustomer>()
+            .ReverseMap();
+        
+        
+        CreateMap<Sale, CreateSaleCommand>()
+            .ReverseMap();
+        
         CreateMap<GetSaleViewDtos, GetByIdSaleDto>()
             .ReverseMap();
         

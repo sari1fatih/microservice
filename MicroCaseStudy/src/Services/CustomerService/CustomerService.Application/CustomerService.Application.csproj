@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Base\EventBus.Base.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Application\Core.Application.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Mailing.MailKit\Core.Mailing.MailKit.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Mailing\Core.Mailing.csproj" />

@@ -50,7 +50,7 @@ public class SaleRepository: EfRepositoryBase<Sale, SaleServiceDbContext,int>,
     
     public async Task<Paginate<GetSaleViewDtos>> GetListView(DynamicQuery dynamicQuery,PageRequest pageRequest)
     {
-        var queryable = Query().ToDynamic(dynamicQuery).AsNoTracking();
+        var queryable = Query().AsNoTracking().ToDynamic(dynamicQuery);
           
         var data = from sale in queryable
                 select new GetSaleViewDtos
@@ -73,5 +73,25 @@ public class SaleRepository: EfRepositoryBase<Sale, SaleServiceDbContext,int>,
                 };
         return await data.ToPaginateAsync(pageRequest.PageIndex, pageRequest.PageSize,CancellationToken.None);
         
+    }
+    
+    public async Task UpdateAllCustomerAsync(UpdateAllCustomer updateAllCustomer)
+    {
+        await Query()
+            .AsNoTracking()
+            .Where(r =>
+                r.CustomerId == updateAllCustomer.CustomerId
+            )
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(u => u.CustomerName, updateAllCustomer.CustomerName)
+                .SetProperty(u => u.CustomerSurname, updateAllCustomer.CustomerSurname)
+                .SetProperty(u => u.CustomerPhone, updateAllCustomer.CustomerPhone)
+                .SetProperty(u => u.CustomerEmail, updateAllCustomer.CustomerEmail)
+                .SetProperty(u => u.IsActive, false)
+                .SetProperty(u => u.IsDeleted, true)
+                .SetProperty(u => u.UpdatedAt, DateTime.UtcNow)
+                .SetProperty(u => u.UpdatedBy, updateAllCustomer.UserId)
+            );
+ 
     }
 }

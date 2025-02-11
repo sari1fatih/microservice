@@ -12,4 +12,5 @@ public interface ISaleRepository: IAsyncRepository<Sale>, IRepository<Sale>
 {
     Task<GetSaleViewDtos> GetView(int saleId);
     Task<Paginate<GetSaleViewDtos>> GetListView(DynamicQuery dynamicQuery, PageRequest pageRequest);
+    Task UpdateAllCustomerAsync(UpdateAllCustomer updateAllCustomer);
 }

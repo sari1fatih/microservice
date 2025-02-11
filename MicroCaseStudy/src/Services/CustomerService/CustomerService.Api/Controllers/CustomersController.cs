@@ -4,6 +4,7 @@ using Core.Persistance.Dynamic;
 using CustomerService.Api.Attributes;
 using CustomerService.Application.Features.Customer.Commands.Create;
 using CustomerService.Application.Features.Customer.Commands.Delete;
+using CustomerService.Application.Features.Customer.Commands.SaleCreated;
 using CustomerService.Application.Features.Customer.Commands.Update;
 using CustomerService.Application.Features.Customer.Queries.GetById;
 using CustomerService.Application.Features.Customer.Queries.GetList;
@@ -38,6 +39,14 @@ public class CustomersController : BaseController
         var response = await Mediator.Send(getListCustomerQuery);
         return Ok(response);
     }
+
+    [HttpPost("StartSale")]
+    public async Task<IActionResult> StartSale(
+        [FromBody] SaleCreatedCommand saleCreatedCommand)
+    {
+        return Ok(await Mediator.Send(saleCreatedCommand));
+    }
+    
     /*Rabbit mq istek atıcak*/
     [HttpPost("AddCustomer")]
     public async Task<IActionResult> AddCustomer(

@@ -26,6 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Base\EventBus.Base.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Factory\EventBus.Factory.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Api\Core.Api.csproj" />
       <ProjectReference Include="..\CustomerService.Bootstrapper\CustomerService.Bootstrapper.csproj" />
     </ItemGroup>
