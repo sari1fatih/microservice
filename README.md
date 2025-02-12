@@ -1,4 +1,4 @@
-# .Net 7 - React Js - Mobx - .Net 7 - Entity Frame Code First - Docker - PostGreSql
+# .Net 8 - Elasticsearch - Kibana - Ocelot - RabbitMq - Hangfire
 
 https://www.youtube.com/watch?v=qiFnLOjG_2s
 
