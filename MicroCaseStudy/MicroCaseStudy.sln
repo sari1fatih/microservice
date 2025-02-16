@@ -102,6 +102,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.ApiGateway", "src\ApiGa
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C006D297-1A2F-4A46-9C2B-34887F15ABD6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerFiles", "DockerFiles", "{B08F1764-ECB1-4CD9-876E-6DCB03931CE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "elasticsearch", "elasticsearch", "{7A9C048C-28B5-4D25-9DE8-70B799347E82}"
+	ProjectSection(SolutionItems) = preProject
+		DockerFiles\elasticsearch\elasticsearch.yml = DockerFiles\elasticsearch\elasticsearch.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kibana", "kibana", "{B0F934ED-B94A-405B-B793-47E97C1E947F}"
+	ProjectSection(SolutionItems) = preProject
+		DockerFiles\kibana\kibana.yml = DockerFiles\kibana\kibana.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{E2C417FC-DA0C-4E77-B71B-26A727788882}"
+	ProjectSection(SolutionItems) = preProject
+		DockerFiles\nginx\Dockerfile = DockerFiles\nginx\Dockerfile
+		DockerFiles\nginx\localhost.conf = DockerFiles\nginx\localhost.conf
+		DockerFiles\nginx\test.bash = DockerFiles\nginx\test.bash
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -306,5 +325,8 @@ Global
 		{BA102D60-1B6A-4650-8669-8F3DA2FEC752} = {597E27C5-0AE5-429C-A2AE-E8B3A657E044}
 		{EC566CA6-5DAD-4B04-8B0B-44FD52F018F7} = {BA102D60-1B6A-4650-8669-8F3DA2FEC752}
 		{B0B827E6-6253-4155-BC40-C410D113147B} = {EC566CA6-5DAD-4B04-8B0B-44FD52F018F7}
+		{7A9C048C-28B5-4D25-9DE8-70B799347E82} = {B08F1764-ECB1-4CD9-876E-6DCB03931CE2}
+		{B0F934ED-B94A-405B-B793-47E97C1E947F} = {B08F1764-ECB1-4CD9-876E-6DCB03931CE2}
+		{E2C417FC-DA0C-4E77-B71B-26A727788882} = {B08F1764-ECB1-4CD9-876E-6DCB03931CE2}
 	EndGlobalSection
 EndGlobal

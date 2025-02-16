@@ -33,7 +33,7 @@ services:
       - net_backend 
 
   postgresql-identity:
-    expose:
+    ports:
       - '5430:5432'
     depends_on:
       - rabbitmq
@@ -48,8 +48,7 @@ services:
       - POSTGRES_PASSWORD=1234
     networks:
       - net_backend
-    
-  
+      
   customerservice.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Test
@@ -67,7 +66,7 @@ services:
       - net_backend
   
   postgresql-customer:
-    expose:
+    ports:
       - '5429:5432'
     depends_on:
       - rabbitmq
@@ -96,10 +95,9 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
     networks:
       - net_backend
-         
- 
+           
   postgresql-sale:
-    expose:
+    ports:
       - '5428:5432'
     depends_on:
       - rabbitmq
@@ -113,7 +111,7 @@ services:
       - POSTGRES_DB=microsale
       - POSTGRES_PASSWORD=1234
     networks:
-      - net_backend  
+      - net_backend
   
   rabbitmq:
     expose:
@@ -125,6 +123,7 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     networks:
+      - net_nginx
       - net_backend
   
   redis:
@@ -137,6 +136,7 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
+      - net_nginx
       - net_backend
 
   elasticsearch:
@@ -159,6 +159,7 @@ services:
       - cluster.name=elasticsearch
       - bootstrap.memory_lock=true 
     networks:
+      - net_nginx
       - net_backend
 
   kibana:
@@ -189,6 +190,8 @@ services:
       - web.apigateway
     ports:
       - '80:80'
+      - "6379:6379"
+      - "5672:5672"
     volumes:
       - ./DockerFiles/nginx/localhost.conf:/etc/nginx/nginx.conf
     restart: always

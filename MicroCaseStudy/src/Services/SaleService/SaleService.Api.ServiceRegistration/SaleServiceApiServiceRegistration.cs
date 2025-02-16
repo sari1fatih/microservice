@@ -15,14 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SaleService.Api.ServiceRegistration.Handlers;
-using AuthenticationServiceCollectionExtensions = Microsoft.Extensions.DependencyInjection.AuthenticationServiceCollectionExtensions;
-using HttpServiceCollectionExtensions = Microsoft.Extensions.DependencyInjection.HttpServiceCollectionExtensions;
-using IServiceCollection = Microsoft.Extensions.DependencyInjection.IServiceCollection;
-using JwtBearerExtensions = Microsoft.Extensions.DependencyInjection.JwtBearerExtensions;
-using OptionsConfigurationServiceCollectionExtensions = Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions;
-using StackExchangeRedisCacheServiceCollectionExtensions = Microsoft.Extensions.DependencyInjection.StackExchangeRedisCacheServiceCollectionExtensions;
-using SwaggerGenOptionsExtensions = Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions;
-using SwaggerGenServiceCollectionExtensions = Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions;
 
 namespace SaleService.Api.ServiceRegistration;
 
@@ -128,14 +120,14 @@ public static class SaleServiceApiServiceRegistration
             configure.AddDebug();
         });
         
-          SwaggerGenServiceCollectionExtensions.AddSwaggerGen(services, c =>
+        services.AddSwaggerGen(c =>
         {
-            SwaggerGenOptionsExtensions.SwaggerDoc(c, "v1", new OpenApiInfo()
+            c.SwaggerDoc("v1", new OpenApiInfo()
             {
                 Title = "SaleService.Api",
                 Version = "v1"
             });
-            SwaggerGenOptionsExtensions.AddSecurityDefinition(c, "Bearer",
+            c.AddSecurityDefinition("Bearer",
                 new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -145,7 +137,7 @@ public static class SaleServiceApiServiceRegistration
                     BearerFormat = "JWT",
                     Scheme = "bearer"
                 });
-            SwaggerGenOptionsExtensions.AddSecurityRequirement(c, new OpenApiSecurityRequirement
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme

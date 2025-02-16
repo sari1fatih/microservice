@@ -18,7 +18,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<SaleServic
         // Mock bağımlılıkları veya temel bir yapılandırma
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.Docker.json") // Varsayılan ayarlar
+            .AddJsonFile("appsettings.Development.json") // Varsayılan ayarlar
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<SaleServiceDbContext>();

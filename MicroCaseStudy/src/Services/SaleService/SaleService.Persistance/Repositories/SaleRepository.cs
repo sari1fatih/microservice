@@ -87,8 +87,8 @@ public class SaleRepository: EfRepositoryBase<Sale, SaleServiceDbContext,int>,
                 .SetProperty(u => u.CustomerSurname, updateAllCustomer.CustomerSurname)
                 .SetProperty(u => u.CustomerPhone, updateAllCustomer.CustomerPhone)
                 .SetProperty(u => u.CustomerEmail, updateAllCustomer.CustomerEmail)
-                .SetProperty(u => u.IsActive, false)
-                .SetProperty(u => u.IsDeleted, true)
+                .SetProperty(u => u.IsActive, true)
+                .SetProperty(u => u.IsDeleted, false)
                 .SetProperty(u => u.UpdatedAt, DateTime.UtcNow)
                 .SetProperty(u => u.UpdatedBy, updateAllCustomer.UserId)
             );

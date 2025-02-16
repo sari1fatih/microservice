@@ -27,7 +27,7 @@ public static class CustomerServiceApiBuilderRegistration
         app.UseMiddleware<SessionMiddleware>();
 
         //if (environment.IsProduction())
-        app.ConfigureCustomExceptionMiddleware();
+        //app.ConfigureCustomExceptionMiddleware();
 
         app.UseDefaultFiles();
 
