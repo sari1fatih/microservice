@@ -8,7 +8,7 @@ The structure is being established...
 
 Docker
 
-  ### BackEnd:
+  # BackEnd:
    To start up the Api and the database
    
    ```ruby
@@ -18,7 +18,7 @@ Docker
    docker-compose up
    ``` 
   
-  ### For Database Migration:
+  # For Database Migration:
   ### 1. To create tables in the identity database.In the terminal go to the directory.
   
   ```ruby
