@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using Core.Security.JWT;
 using Core.WebAPI.Appsettings;
 using IdentityService.Api.ServiceRegistration.Handlers;
+using IdentityService.Api.ServiceRegistration.HostedServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -178,5 +179,6 @@ public static class IdentityServiceApiServiceRegistration
         services.AddEndpointsApiExplorer();
 
         services.AddControllers();
+        services.AddHostedService<RefreshTokenHostedService>();
     }
 }

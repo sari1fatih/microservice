@@ -29,7 +29,7 @@ public static class IdentityServiceApiBuilderRegistration
         app.UseMiddleware<SessionMiddleware>();
 
         //if (environment.IsProduction())
-        //app.ConfigureCustomExceptionMiddleware();
+           app.ConfigureCustomExceptionMiddleware();
 
         app.UseDefaultFiles();
 
