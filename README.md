@@ -1,4 +1,4 @@
-# .Net 8 - Elasticsearch - Kibana - Ocelot - RabbitMq - Hangfire
+# .Net 8 - Docker - Nginx -Elasticsearch - Kibana - Ocelot - RabbitMq - Postgresql - Entity Framework
 
 https://www.youtube.com/watch?v=qiFnLOjG_2s
 
@@ -10,7 +10,7 @@ The structure is being established...
   ## Technologies used:
 
 * ASP.NET Core
-* Entity Framework Core*
+* Entity Framework
 * Swagger
 * Mapper
 * Serilog
@@ -18,45 +18,65 @@ The structure is being established...
 * Ocelot
 * Elasticsearch
 * Kibana
-* Hangfire
+* Nginx
 * RabbitMQ
 
-Bu proje, kullanıcı yönetimi, müşteri yönetimi ve satış takibi için mikroservis mimarisiyle tasarlanmış bir sistemdir. Aşağıda projede yer alan beklenen özellikler ve değerlendirme kriterleri yer almaktadır.
+# Case Study - Microservice Project
 
-## Beklenen Özellikler
+This project is designed as a microservice architecture for **user management, customer management, and sales tracking**. Below are the expected features and evaluation criteria.
 
-### 1. Kullanıcı Yönetimi:
-- Kullanıcılar sisteme giriş yapabilmelidir (JWT ile kimlik doğrulama).
-- Kullanıcı rollerini yönetebilirsiniz (Admin, Satış Temsilcisi vb.).
-- Kullanıcı bilgileri CRUD işlemleri ile yönetilebilir.
+## Expected Features
 
-### 2. Müşteri Yönetimi:
-- Müşteri bilgileri (isim, e-posta, telefon, şirket) CRUD işlemleri ile yönetilebilir.
-- Müşterilere notlar eklenebilir ve düzenlenebilir.
-- Müşteri listesi sıralanabilir ve filtrelenebilir.
+### 1. User Management:
+- Users should be able to log in to the system (**JWT authentication**).
+- Manage user roles (**Admin, Sales Representative, etc.**).
+- User information should be managed with **CRUD operations**.
 
-### 3. Satış Takibi:
-- Potansiyel satışlar için bir pipeline oluşturulabilir (örneğin: "Yeni", "İletişimde", "Anlaşma", "Kapandı").
-- Her bir satış durumu için tarih ve notlar tutulabilir.
-- Satış durumu değiştirilirken işlem tarihi kaydedilir.
+### 2. Customer Management:
+- Customers' information (**name, email, phone, company**) should be managed with **CRUD operations**.
+- Notes can be added and edited for each customer.
+- The customer list should be **sortable and filterable**.
 
-### 4. Mikroservis Mimari:
-- Kullanıcı yönetimi, müşteri yönetimi ve satış yönetimi ayrı mikro servisler olarak tasarlanmalıdır.
-- Mikroservisler, bir API Gateway üzerinden haberleşmelidir.
+### 3. Sales Tracking:
+- Create a **sales pipeline** for potential sales (e.g., "New", "In Contact", "Negotiation", "Closed").
+- Store the **date and notes** for each sales stage.
+- Log the **timestamp** when the sales status changes.
 
-### 5. Veri Tabanı:
-- SQL ve NoSQL veritabanı tercihi ile veritabanı tasarımı yapılmalıdır.
-- Her bir mikroservis kendi veritabanına sahip olmalıdır.
+### 4. Microservice Architecture:
+- User management, customer management, and sales tracking should be designed as **separate microservices**.
+- Microservices should communicate through an **API Gateway**.
 
-### 6. Performans ve Kullanılabilirlik:
-- API çağrılarının performansı ve yanıt süreleri.
+### 5. Database:
+- Design using **SQL or NoSQL database** preference.
+- Each microservice should have **its own database**.
 
-## Proje Teslim Şekli
+### 6. Testing & Documentation:
+- Write **unit tests** for each service.
+- Prepare API documentation (**Swagger** is recommended).
 
-- Mikroservis, versiyon kontrol sistemi ile (Git) versiyonlandırılıp uzak repoya (GitHub, GitLab, Bitbucket vb.) yüklenmelidir.
-- Mikroservisi bir container içine alınız.
-- Her mikroservis için ayrı bir klasör oluşturulmalıdır.
-- Docker Compose ile tüm sistemi çalıştırmak için bir `docker-compose.yml` dosyası hazırlanmalıdır.
-- Mikroservis yazılırken “clean code” ve güvenli kod yazma kurallarına özen gösterilmelidir.
-- API dokümantasyonu Swagger üzerinden erişilebilir olmalıdır.
-- Yaptığınız çalışmayı açıklayan bir video hazırlanıp linkinin gönderilmesi tercih edilir.
+## Evaluation Criteria
+
+1. **Code Quality**:  
+   - Modularity, readability, and adherence to **DRY principles**.  
+2. **Microservice Design**:  
+   - Independence of services.  
+3. **Database Design**:  
+   - Performance and scalability.  
+4. **Testing & Security**:  
+   - Coverage of unit tests.  
+   - Secure authentication using **JWT**.  
+5. **Technical Documentation**:  
+   - Detailed documentation for better understanding.  
+6. **Performance & Usability**:  
+   - API response times and efficiency.  
+
+## Project Submission
+
+- Version control the microservices using **Git** and upload them to a remote repository (**GitHub, GitLab, Bitbucket**).
+- Containerize the microservices.
+- Organize each microservice in **separate folders**.
+- Use **Docker Compose** to orchestrate the entire system (`docker-compose.yml` file).
+- Follow **clean code** and **secure coding** principles.
+- API documentation should be accessible via **Swagger**.
+- Preferably, provide a **video explanation** of your work and share its link.
+
