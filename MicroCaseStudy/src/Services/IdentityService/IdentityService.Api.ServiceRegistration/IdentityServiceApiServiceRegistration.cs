@@ -1,15 +1,9 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.RateLimiting;
-using Core.Hangfire.Managers;
-using Core.Hangfire.Settings;
 using Core.Security.JWT;
 using Core.WebAPI.Appsettings;
-using Hangfire;
-using Hangfire.PostgreSql;
-using IdentityService.Api.ServiceRegistration.BackgroundJobs;
 using IdentityService.Api.ServiceRegistration.Handlers;
-using IdentityService.Application.BackgroundJobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -48,37 +42,13 @@ public static class IdentityServiceApiServiceRegistration
 
         services.AddStackExchangeRedisCache(opt =>
             opt.Configuration = redisConfigurations?.ConnectionString ?? string.Empty);
-        
-        var hangfireSettings = configuration.GetSection(nameof(HangfireSettings)).Get<HangfireSettings>();
-        PostgreSqlStorageOptions option = new PostgreSqlStorageOptions
-        {
-            PrepareSchemaIfNecessary = true,
-            SchemaName = "hangfire",
-            UseNativeDatabaseTransactions = true,
-        };
-
-        services.AddHangfire(config =>
-        {
-            config.UsePostgreSqlStorage(hangfireSettings?.ConnectionString, option)
-                .WithJobExpirationTimeout(TimeSpan.FromHours(6));
-        });
-        
-        services.AddScoped<IActiveRefreshTokenSetRedisServiceBackgroundJobWorker, ActiveRefreshTokenSetRedisServiceBackgroundJobWorker>();
-        JobStorage.Current = new PostgreSqlStorage(hangfireSettings?.ConnectionString, option);
-        services.AddHangfireServer(ser =>
-        {
-            ser.HeartbeatInterval = TimeSpan.FromHours(10);
-            ser.Queues = new[] { "set-active-refresh-token" };
-            services.AddBackgroundJob<IActiveRefreshTokenSetRedisServiceBackgroundJobWorker, ActiveRefreshTokenSetRedisServiceBackgroundJobWorker>();
-        });
-        
+       
         services.AddHttpContextAccessor();
-        
-         services.AddRateLimiter(options =>
+
+        services.AddRateLimiter(options =>
         {
-            
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            
+
             options.OnRejected = async (context, cancellationToken) =>
             {
                 context.HttpContext.Response.ContentType = "application/json"; // JSON formatında response
@@ -93,19 +63,19 @@ public static class IdentityServiceApiServiceRegistration
 
                 var jsonResponse = JsonSerializer.Serialize(response);
                 await context.HttpContext.Response.WriteAsync(jsonResponse, cancellationToken);
-            }; 
-            
-            
+            };
+
+
             options.AddPolicy("RateLimitUserId", context =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: context.User?.Claims?.FirstOrDefault(x => x
-                    .Type == CustomClaimKeys.Id)?.Value,
+                        .Type == CustomClaimKeys.Id)?.Value,
                     factory: _ => new FixedWindowRateLimiterOptions()
                     {
                         PermitLimit = ratelimitingSettings.PermitLimit,
                         Window = TimeSpan.FromSeconds(ratelimitingSettings.WindowSeconds)
                     }
                 ));
-            
+
             options.AddPolicy("RateLimitIp", context =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: context.Connection.RemoteIpAddress?.ToString(),
                     factory: _ => new FixedWindowRateLimiterOptions()
@@ -114,8 +84,6 @@ public static class IdentityServiceApiServiceRegistration
                         Window = TimeSpan.FromSeconds(ratelimitingSettings.WindowSeconds)
                     }
                 ));
-            
-            
         });
 
 
@@ -123,7 +91,7 @@ public static class IdentityServiceApiServiceRegistration
         rsa.ImportFromPem(tokenOptions.PublicKey);
 
         var key = new RsaSecurityKey(rsa);
-        
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -139,12 +107,12 @@ public static class IdentityServiceApiServiceRegistration
                     ValidIssuer = tokenOptions.Issuer,
                     ValidateAudience = true,
                     ValidAudience = tokenOptions.Audience,
-                    ValidateLifetime = true ,// Token süresinin geçerliliğini kontrol et
+                    ValidateLifetime = true, // Token süresinin geçerliliğini kontrol et
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
-          services.AddSwaggerGen(c =>
+        services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo()
             {
@@ -175,7 +143,7 @@ public static class IdentityServiceApiServiceRegistration
                     new string[] { }
                 }
             });
-        }); 
+        });
         services.AddAuthorization(options =>
         {
             options.AddPolicy("TokenAuthorizationHandler",
@@ -185,7 +153,7 @@ public static class IdentityServiceApiServiceRegistration
         });
 
         services.AddScoped<IAuthorizationHandler, TokenAuthorizationHandler>();
-          
+
         services.AddHttpLogging(logging =>
         {
             logging.LoggingFields = HttpLoggingFields.All;
@@ -208,9 +176,7 @@ public static class IdentityServiceApiServiceRegistration
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
         services.AddEndpointsApiExplorer();
-        
+
         services.AddControllers();
-          
-          
     }
 }

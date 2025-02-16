@@ -11,7 +11,6 @@ namespace CustomerService.Api.ServiceRegistration.Handlers;
 
 public class TokenAuthorizationRequirement : IAuthorizationRequirement
 {
-    
 }
 
 public class TokenAuthorizationHandler : AuthorizationHandler<TokenAuthorizationRequirement>
@@ -48,9 +47,9 @@ public class TokenAuthorizationHandler : AuthorizationHandler<TokenAuthorization
             var refreshJwtToken = handler.ReadJwtToken(token);
 
             var jti = refreshJwtToken.Claims.FirstOrDefault(x => x.Type == CustomClaimKeys.Jti)?.Value;
-            
+
             var userId = refreshJwtToken.Claims.FirstOrDefault(x => x.Type == CustomClaimKeys.Id)?.Value;
-            
+
             IDistributedHelper distributedHelper = _serviceProvider.GetRequiredService<IDistributedHelper>();
 
             JwtRedisDto jwtRedisDto = new JwtRedisDto();
@@ -58,15 +57,20 @@ public class TokenAuthorizationHandler : AuthorizationHandler<TokenAuthorization
             jwtRedisDto = await distributedHelper.GetResponse(userId,
                 jwtRedisDto, CancellationToken.None);
 
-            jwtRedisDto.JwtExpireDateDtos.RemoveAll(x => x.ExpiresDate < DateTime.Now);
-            var isJwtActive = jwtRedisDto.JwtExpireDateDtos.FirstOrDefault(x => x.Jwt == jti);
+            var isOld = jwtRedisDto.JwtExpireDateDtos.Any(x => x.ExpiresDate < DateTime.Now);
+
+            if (isOld)
+            {
+                jwtRedisDto.JwtExpireDateDtos.RemoveAll(x => x.ExpiresDate < DateTime.Now);
+
+                await distributedHelper.AddToCache(
+                    RedisConstants.Jwt,
+                    jwtRedisDto.UserId,
+                    jwtRedisDto,
+                    CancellationToken.None);
+            }
             
-            await distributedHelper.AddToCache(
-                RedisConstants.Jwt,
-                jwtRedisDto.UserId,
-                jwtRedisDto,
-                CancellationToken.None);
-             
+            var isJwtActive = jwtRedisDto.JwtExpireDateDtos.FirstOrDefault(x => x.Jwt == jti);
             if (isJwtActive == null)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -75,7 +79,7 @@ public class TokenAuthorizationHandler : AuthorizationHandler<TokenAuthorization
                 return;
             }
         }
-        
+
         context.Succeed(requirement);
     }
 }

@@ -63,7 +63,6 @@ namespace IdentityService.Api.Controllers
         
         
         [EnableRateLimiting("RateLimitIp")]
-       
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
@@ -126,6 +125,17 @@ namespace IdentityService.Api.Controllers
             [FromBody] VerifyResetPasswordCommand verifyResetPasswordCommand)
         {
             var result = await Mediator.Send(verifyResetPasswordCommand);
+
+            return Ok(result);
+        }
+        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("SetActiveRefreshTokenToRedis")]
+        public async Task<IActionResult> SetActiveRefreshTokenToRedis()
+        {
+            SetActiveRefreshTokenToRedisCommand setActiveRefreshTokenToRedisCommand=new SetActiveRefreshTokenToRedisCommand();
+            
+            var result = await Mediator.Send(setActiveRefreshTokenToRedisCommand);
 
             return Ok(result);
         }

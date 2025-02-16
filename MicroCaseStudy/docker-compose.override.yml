@@ -1,47 +1,210 @@
 services:
-  identityservice.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-  saleservice.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
-  customerservice.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
+  
   web.apigateway:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
+      - ASPNETCORE_ENVIRONMENT=Test
+      - ASPNETCORE_HTTP_PORTS=6000
+    expose:
+      - "6000:6000"
+    depends_on:
+      - identityservice.api
+      - saleservice.api
+      - customerservice.api
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    networks:
+      - net_nginx
+      - net_backend
+  
+  identityservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - ASPNETCORE_HTTP_PORTS=6001
+    expose:
+      - "6001:6001"
+    depends_on:
+      - postgresql-identity
+      - saleservice.api
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    networks:
+      - net_backend 
+
+  postgresql-identity:
+    expose:
+      - '5430:5432'
+    depends_on:
+      - rabbitmq
+      - redis
+      - elasticsearch
+      - kibana
+    volumes:
+      - 'postgresql-identity-data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=microidentity
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - net_backend
+    
+  
+  customerservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - ASPNETCORE_HTTP_PORTS=6002
+    expose:
+      - "6002:6002"
+    depends_on:
+      - saleservice.api
+      - identityservice.api
+      - postgresql-customer
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    networks:
+      - net_backend
+  
+  postgresql-customer:
+    expose:
+      - '5429:5432'
+    depends_on:
+      - rabbitmq
+      - redis
+      - elasticsearch
+      - kibana
+    volumes:
+      - 'postgresql-customer-data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=microcustomer
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - net_backend
+ 
+  saleservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - ASPNETCORE_HTTP_PORTS=6003
+    expose:
+      - "6003:6003"
+    depends_on:
+      - postgresql-sale
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    networks:
+      - net_backend
+         
+ 
+  postgresql-sale:
+    expose:
+      - '5428:5432'
+    depends_on:
+      - rabbitmq
+      - redis
+      - elasticsearch
+      - kibana
+    volumes:
+      - 'postgresql-sale-data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=microsale
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - net_backend  
+  
+  rabbitmq:
+    expose:
+      - '5672:5672' # AMQP protokolü için
+      - '15672:15672' # Yönetim paneli için
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - net_backend
+  
+  redis:
+    depends_on:
+      - rabbitmq
+    expose:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - net_backend
+
+  elasticsearch:
+    depends_on:
+      - rabbitmq
+      - redis
+    expose:
+      - '9200:9200'
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data/
+      - ./DockerFiles/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - xpack.security.enabled=false
+      - xpack.monitoring.templates.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true 
+    networks:
+      - net_backend
+
+  kibana:
+    depends_on:
+      - rabbitmq
+      - redis
+      - elasticsearch
+    expose:
+      - '5601:5601'
+    volumes:
+      - ./DockerFiles/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /var/lib/docker/kibana:/usr/share/kibana/data
+    environment:
+      - xpack.security.enabled=false
+      - xpack.fleet.agents.enabled=false
+    networks:
+      - net_nginx
+      - net_backend
+
+  nginx:    
+    depends_on:
+      - rabbitmq
+      - redis
+      - elasticsearch
+      - postgresql-sale
+      - postgresql-customer
+      - postgresql-identity
+      - web.apigateway
+    ports:
+      - '80:80'
+    volumes:
+      - ./DockerFiles/nginx/localhost.conf:/etc/nginx/nginx.conf
+    restart: always
+    networks:
+      - net_nginx
+
+volumes:
+  rabbitmq-data:
+  redis-data:
+  elasticsearch-data:
+  postgresql-sale-data:
+  postgresql-customer-data:
+  postgresql-identity-data:
+    
+networks:
+  net_backend:
+    driver: bridge 
+  net_nginx:
+    driver: bridge

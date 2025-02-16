@@ -62,7 +62,7 @@ public class ElasticsearchRequestResponseAttribute : ActionFilterAttribute
                     DataLog = userSession.DataLog,
                 };
 
-                await elasticSearch.InsertAsync(new ElasticSearchInsertUpdateModel(
+                var a =await elasticSearch.InsertAsync(new ElasticSearchInsertUpdateModel(
                     Activity.Current?.Id,
                     ElasticsearchIndex.IdentityServiceIndexName,
                     elasticsearchLog

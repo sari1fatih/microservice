@@ -3,6 +3,8 @@ using CustomerService.Bootstrapper;
 using EventBus.Base;
 using EventBus.Base.Abstraction;
 using EventBus.Factory;
+using EventBus.RabbitMQ;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +28,8 @@ environment = builder.Environment;
 configureHostBuilder = builder.Host;
 configuration = configurationBuilder.Build();
 
- 
+RabbitmqConfig rabbitmqConfig = configuration.GetSection(nameof(RabbitmqConfig)).Get<RabbitmqConfig>();
+
 builder.Services.AddSingleton<IEventBus>(sp =>
 {
     EventBusConfig config = new()
@@ -34,7 +37,11 @@ builder.Services.AddSingleton<IEventBus>(sp =>
         ConnectionRetryCount = 5,
         EventNameSuffix = "IntegrationEvent",
         SubscriberClientAppName = "SaleService",
-        EventBusType = EventBusType.RabbitMQ
+        EventBusType = EventBusType.RabbitMQ,
+        Connection = new ConnectionFactory()
+        {
+            HostName = rabbitmqConfig?.HostName
+        }
     };
 
     return EventBusFactory.Create(config, sp);

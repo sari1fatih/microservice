@@ -1,7 +1,5 @@
 using Core.Api.Middlewares;
-using Core.Hangfire.Settings;
-using Hangfire;
-using HangfireBasicAuthenticationFilter;
+using Core.CrossCuttingConcerns.Exceptions.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,36 +12,24 @@ public static class IdentityServiceApiBuilderRegistration
     public static void AddIdentityServiceApiBuilderRegistration(this IApplicationBuilder app,
         IWebHostEnvironment environment, IConfiguration configuration)
     {
-        var hangfireSettings = configuration.GetSection(nameof(HangfireSettings)).Get<HangfireSettings>();
+        if (environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-        app.UseSwagger();
-        app.UseSwaggerUI();
-
-
+        app.UseCors();
+        
         app.UseRateLimiter();
 
         app.UseHttpLogging();
-        app.UseCors();
-
-        app.UseHangfireDashboard("/jobs", new DashboardOptions
-        {
-            DashboardTitle = "MicroCaseStudy",
-            Authorization = new[]
-            {
-                new HangfireCustomBasicAuthenticationFilter
-                {
-                    User = hangfireSettings?.UserName,
-                    Pass = hangfireSettings?.Password
-                }
-            }
-        });
-
+        
         app.UseAuthentication();
 
         app.UseMiddleware<SessionMiddleware>();
 
         //if (environment.IsProduction())
-        //app.ConfigureCustomExceptionMiddleware();
+        app.ConfigureCustomExceptionMiddleware();
 
         app.UseDefaultFiles();
 

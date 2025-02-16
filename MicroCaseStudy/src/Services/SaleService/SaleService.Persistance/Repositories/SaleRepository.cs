@@ -38,7 +38,7 @@ public class SaleRepository: EfRepositoryBase<Sale, SaleServiceDbContext,int>,
                 SaleStatusParameterValue = (
                     from saleDetail in _context.SaleDetails
                     join parameter in _context.Parameters
-                        on saleDetail.SaleId equals parameter.Id
+                        on saleDetail.SaleStatusParameterId equals parameter.Id
                     where saleDetail.SaleId == sale.Id
                     orderby saleDetail.Id descending 
                     select parameter.ParameterValue
@@ -65,7 +65,7 @@ public class SaleRepository: EfRepositoryBase<Sale, SaleServiceDbContext,int>,
                     SaleStatusParameterValue = (
                         from saleDetail in _context.SaleDetails
                         join parameter in _context.Parameters
-                            on saleDetail.SaleId equals parameter.Id
+                            on saleDetail.SaleStatusParameterId equals parameter.Id
                         where saleDetail.SaleId == sale.Id
                         orderby saleDetail.Id descending 
                         select parameter.ParameterValue

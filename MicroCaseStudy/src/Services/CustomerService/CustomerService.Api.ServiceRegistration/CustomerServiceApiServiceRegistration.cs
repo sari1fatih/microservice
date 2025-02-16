@@ -20,10 +20,10 @@ namespace CustomerService.Api.ServiceRegistration;
 
 public static class CustomerServiceApiServiceRegistration
 {
-      public static void AddCustomerServiceApiServiceRegistration(this IServiceCollection services,
+    public static void AddCustomerServiceApiServiceRegistration(this IServiceCollection services,
         IConfiguration configuration)
     {
-         services.Configure<WebApiConfiguration>(configuration.GetSection(nameof(WebApiConfiguration)));
+        services.Configure<WebApiConfiguration>(configuration.GetSection(nameof(WebApiConfiguration)));
 
         var webApiConfiguration = configuration.GetSection(nameof(WebApiConfiguration)).Get<WebApiConfiguration>() ??
                                   throw new InvalidOperationException(
@@ -35,7 +35,7 @@ public static class CustomerServiceApiServiceRegistration
 
         var redisConfigurations = configuration.GetSection(nameof(RedisConfigurations)).Get<RedisConfigurations>();
         var ratelimitingSettings = configuration.GetSection(nameof(RatelimitingSettings)).Get<RatelimitingSettings>();
-
+       
 
         services.Configure<TokenOptions>(configuration.GetSection(nameof(TokenOptions)));
 
@@ -43,14 +43,13 @@ public static class CustomerServiceApiServiceRegistration
 
         services.AddStackExchangeRedisCache(opt =>
             opt.Configuration = redisConfigurations?.ConnectionString ?? string.Empty);
-        
+
         services.AddHttpContextAccessor();
-        
-         services.AddRateLimiter(options =>
+
+        services.AddRateLimiter(options =>
         {
-            
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            
+
             options.OnRejected = async (context, cancellationToken) =>
             {
                 context.HttpContext.Response.ContentType = "application/json"; // JSON formatında response
@@ -65,18 +64,18 @@ public static class CustomerServiceApiServiceRegistration
 
                 var jsonResponse = JsonSerializer.Serialize(response);
                 await context.HttpContext.Response.WriteAsync(jsonResponse, cancellationToken);
-            }; 
-            
+            };
+
             options.AddPolicy("RateLimitUserId", context =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: context.User?.Claims?.FirstOrDefault(x => x
-                    .Type == CustomClaimKeys.Id)?.Value,
+                        .Type == CustomClaimKeys.Id)?.Value,
                     factory: _ => new FixedWindowRateLimiterOptions()
                     {
                         PermitLimit = ratelimitingSettings.PermitLimit,
                         Window = TimeSpan.FromSeconds(ratelimitingSettings.WindowSeconds)
                     }
                 ));
-            
+
             options.AddPolicy("RateLimitIp", context =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: context.Connection.RemoteIpAddress?.ToString(),
                     factory: _ => new FixedWindowRateLimiterOptions()
@@ -85,8 +84,6 @@ public static class CustomerServiceApiServiceRegistration
                         Window = TimeSpan.FromSeconds(ratelimitingSettings.WindowSeconds)
                     }
                 ));
-            
-            
         });
 
 
@@ -94,7 +91,7 @@ public static class CustomerServiceApiServiceRegistration
         rsa.ImportFromPem(tokenOptions.PublicKey);
 
         var key = new RsaSecurityKey(rsa);
-        
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -110,18 +107,18 @@ public static class CustomerServiceApiServiceRegistration
                     ValidIssuer = tokenOptions.Issuer,
                     ValidateAudience = true,
                     ValidAudience = tokenOptions.Audience,
-                    ValidateLifetime = true ,// Token süresinin geçerliliğini kontrol et
+                    ValidateLifetime = true, // Token süresinin geçerliliğini kontrol et
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
         services.AddLogging(configure =>
-        { 
+        {
             configure.AddConsole();
             configure.AddDebug();
         });
-        
-          services.AddSwaggerGen(c =>
+
+        services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo()
             {
@@ -153,7 +150,7 @@ public static class CustomerServiceApiServiceRegistration
                 }
             });
         });
- 
+
         services.AddAuthorization(options =>
         {
             options.AddPolicy("TokenAuthorizationHandler",
@@ -163,7 +160,7 @@ public static class CustomerServiceApiServiceRegistration
         });
 
         services.AddScoped<IAuthorizationHandler, TokenAuthorizationHandler>();
-          
+
         services.AddHttpLogging(logging =>
         {
             logging.LoggingFields = HttpLoggingFields.All;
@@ -186,7 +183,7 @@ public static class CustomerServiceApiServiceRegistration
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
         services.AddEndpointsApiExplorer();
-        
+
         services.AddControllers();
     }
 }

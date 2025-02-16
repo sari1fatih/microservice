@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using SaleService.Api.Attributes;
-using SaleService.Application.Features.Parameters.Queries.GetById;
-using SaleService.Application.Features.Parameters.Queries.GetList;
 using SaleService.Application.Features.Sales.Queries.GetById;
 using SaleService.Application.Features.Sales.Queries.GetList;
 

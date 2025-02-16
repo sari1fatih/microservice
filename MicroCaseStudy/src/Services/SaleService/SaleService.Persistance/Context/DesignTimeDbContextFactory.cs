@@ -15,15 +15,14 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<SaleServic
 
     public SaleServiceDbContext CreateDbContext(string[] args)
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
         // Mock bağımlılıkları veya temel bir yapılandırma
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Varsayılan ayarlar
+            .AddJsonFile("appsettings.Docker.json") // Varsayılan ayarlar
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<SaleServiceDbContext>();
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString("Pragmuti1"));
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString("SaleService"));
 
         var httpContextAccessor = new HttpContextAccessor(); // Basit bir örnek, boş bir HttpContext döner.
 

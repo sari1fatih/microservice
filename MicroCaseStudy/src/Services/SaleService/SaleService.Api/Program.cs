@@ -1,6 +1,8 @@
 using EventBus.Base;
 using EventBus.Base.Abstraction;
 using EventBus.Factory;
+using EventBus.RabbitMQ;
+using RabbitMQ.Client;
 using SaleService.Api.Extensions.Registration.EventHandlerRegistration;
 using SaleService.Api.IntegrationEvents.EventHandlers;
 using SaleService.Api.IntegrationEvents.Events;
@@ -32,7 +34,9 @@ configuration = configurationBuilder.Build();
 
 builder.Services.AddConfigureEventHandlers();
 
-builder.Services.AddSingleton(sp =>
+RabbitmqConfig rabbitmqConfig = configuration.GetSection(nameof(RabbitmqConfig)).Get<RabbitmqConfig>();
+
+builder.Services.AddSingleton<IEventBus>(sp =>
 {
     EventBusConfig config = new()
     {
@@ -40,7 +44,10 @@ builder.Services.AddSingleton(sp =>
         EventNameSuffix = "IntegrationEvent",
         SubscriberClientAppName = "SaleService",
         EventBusType = EventBusType.RabbitMQ,
-
+        Connection = new ConnectionFactory()
+        {
+            HostName = rabbitmqConfig?.HostName,
+        }
     };
 
     return EventBusFactory.Create(config, sp);

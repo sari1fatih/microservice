@@ -21,6 +21,15 @@
     {
       "ServiceName": "identity-service",
       "SwaggerKey": "identity-service",
+      "DownstreamPathTemplate": "/api/Auths/SetActiveRefreshTokenToRedis",
+      "UpstreamPathTemplate": "/Auths/SetActiveRefreshTokenToRedis",
+      "UpstreamHttpMethod": [
+        "POST"
+      ]
+    },
+    {
+      "ServiceName": "identity-service",
+      "SwaggerKey": "identity-service",
       "DownstreamPathTemplate": "/api/Auths/VerifyRegister",
       "UpstreamPathTemplate": "/Auths/VerifyRegister",
       "UpstreamHttpMethod": [

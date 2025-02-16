@@ -10,32 +10,30 @@ namespace SaleService.Api.ServiceRegistration;
 public static class SaleServiceApiBuilderRegistration
 {
     public static void AddSaleServiceApiBuilderRegistration(this IApplicationBuilder app,
-        IWebHostEnvironment environment,IConfiguration configuration)
+        IWebHostEnvironment environment, IConfiguration configuration)
     {
         if (environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        app.UseCors();
 
         app.UseRateLimiter();
-         
+
         app.UseHttpLogging();
-        app.UseCors();
-        
-        
+ 
         app.UseAuthentication();
-     
+
         app.UseMiddleware<SessionMiddleware>();
-        
+
         //if (environment.IsProduction())
-        //app.ConfigureCustomExceptionMiddleware();
-   
-        app.UseDefaultFiles(); 
-   
+        app.ConfigureCustomExceptionMiddleware();
+
+        app.UseDefaultFiles();
+
         app.UseHttpsRedirection();
-           
+
         app.UseAuthorization();
-           
     }
 }

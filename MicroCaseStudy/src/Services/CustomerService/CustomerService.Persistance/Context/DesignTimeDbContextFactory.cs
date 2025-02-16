@@ -15,11 +15,10 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<CustomerSe
 
     public CustomerServiceDbContext CreateDbContext(string[] args)
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
         // Mock bağımlılıkları veya temel bir yapılandırma
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Varsayılan ayarlar
+            .AddJsonFile("appsettings.Docker.json") // Varsayılan ayarlar
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<CustomerServiceDbContext>();

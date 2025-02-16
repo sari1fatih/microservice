@@ -20,7 +20,6 @@ COPY ["src/Services/IdentityService/IdentityService.Bootstrapper/IdentityService
 COPY ["src/Services/IdentityService/IdentityService.Api.ServiceRegistration/IdentityService.Api.ServiceRegistration.csproj", "src/Services/IdentityService/IdentityService.Api.ServiceRegistration/"]
 COPY ["src/Cores/Core.CrossCuttingConcerns/Core.CrossCuttingConcerns.csproj", "src/Cores/Core.CrossCuttingConcerns/"]
 COPY ["src/Cores/Core.ElasticSearch/Core.ElasticSearch.csproj", "src/Cores/Core.ElasticSearch/"]
-COPY ["src/Cores/Core.Hangfire/Core.Hangfire.csproj", "src/Cores/Core.Hangfire/"]
 COPY ["src/Services/IdentityService/IdentityService.Application/IdentityService.Application.csproj", "src/Services/IdentityService/IdentityService.Application/"]
 COPY ["src/Cores/Core.Redis/Core.Redis.csproj", "src/Cores/Core.Redis/"]
 COPY ["src/Cores/Core.Application/Core.Application.csproj", "src/Cores/Core.Application/"]

@@ -2,11 +2,9 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -26,5 +24,12 @@ RUN dotnet publish "./Web.ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/pub
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
+
+# Tüm kullanıcılara tam erişim izni ver (chmod 777)
+RUN chmod -R 777 /app
+
+# Yayınlanan dosyaları kopyala
 COPY --from=publish /app/publish .
+
+# Uygulamayı çalıştır
 ENTRYPOINT ["dotnet", "Web.ApiGateway.dll"]

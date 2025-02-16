@@ -13,7 +13,7 @@ namespace EventBus.RabbitMQ;
 public class EventBusRabbitMQ : BaseEventBus
 {
     private RabbitMQPersistanceConnection _persistanceConnection;
-    private readonly IConnectionFactory _connectionFactory;
+    private readonly IConnectionFactory connectionFactory;
 
     private readonly IModel consumerChannel;
 
@@ -22,26 +22,32 @@ public class EventBusRabbitMQ : BaseEventBus
     {
         if (eventBusConfig.Connection != null)
         {
-            var connJson = JsonConvert.SerializeObject(EventBusConfig.Connection, new JsonSerializerSettings()
+            if (EventBusConfig.Connection is ConnectionFactory)
+                connectionFactory = EventBusConfig.Connection as ConnectionFactory;
+            else
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+                var connJson = JsonConvert.SerializeObject(EventBusConfig.Connection, new JsonSerializerSettings()
+                {
+                    // Self referencing loop detected for property 
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
 
-            _connectionFactory = JsonConvert.DeserializeObject<ConnectionFactory>(connJson);
+                connectionFactory = JsonConvert.DeserializeObject<ConnectionFactory>(connJson);
+            }
         }
         else
         {
-            _connectionFactory = new ConnectionFactory();
+            connectionFactory = new ConnectionFactory();
         }
 
         _persistanceConnection =
-            new RabbitMQPersistanceConnection(_connectionFactory, eventBusConfig.ConnectionRetryCount);
+            new RabbitMQPersistanceConnection(connectionFactory, eventBusConfig.ConnectionRetryCount);
 
         consumerChannel = CreateConsumerChannel();
 
         SubsManager.OnEventRemoved += SubsManager_OnEventRemoved;
     }
-    
+
 
     #region Overrides of BaseEventBus
 
@@ -55,18 +61,18 @@ public class EventBusRabbitMQ : BaseEventBus
         var policy = Policy.Handle<BrokerUnreachableException>()
             .Or<SocketException>()
             .WaitAndRetry(EventBusConfig.ConnectionRetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
-                retryAttempt)), (ex, time) =>
+                    retryAttempt)), (ex, time) =>
                 {
                     // log
                 }
             );
-        
+
         var eventName = @event.GetType().Name;
-        
+
         eventName = ProcessEventName(eventName);
-        
-        consumerChannel.ExchangeDeclare(exchange:EventBusConfig.DefaultTopicName,type: "direct");
-        
+
+        consumerChannel.ExchangeDeclare(exchange: EventBusConfig.DefaultTopicName, type: "direct");
+
         var message = JsonConvert.SerializeObject(@event);
         var body = Encoding.UTF8.GetBytes(message);
 
@@ -74,31 +80,29 @@ public class EventBusRabbitMQ : BaseEventBus
         {
             var properties = consumerChannel.CreateBasicProperties();
             properties.DeliveryMode = 2; // persistent
-          // Test için
-          // Publish metodu içerisinde mesajı ilgili exchange e göndermemiz gerekiyor
-          // Exchange ye göndermemiş gerekiyor
-          /*
-          consumerChannel.QueueDeclare(queue: GetSubName(eventName), // Ensure queue exists while publishing
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null
-          );            
-         
-          consumerChannel.QueueBind(queue: GetSubName(eventName),
-                exchange: EventBusConfig.DefaultTopicName,
-                eventName);
-            */
+            // Test için
+            // Publish metodu içerisinde mesajı ilgili exchange e göndermemiz gerekiyor
+            // Exchange ye göndermemiş gerekiyor
+            /*
+            consumerChannel.QueueDeclare(queue: GetSubName(eventName), // Ensure queue exists while publishing
+                  durable: true,
+                  exclusive: false,
+                  autoDelete: false,
+                  arguments: null
+            );
+
+            consumerChannel.QueueBind(queue: GetSubName(eventName),
+                  exchange: EventBusConfig.DefaultTopicName,
+                  eventName);
+              */
             consumerChannel.BasicPublish(
-                exchange:EventBusConfig.DefaultTopicName,
+                exchange: EventBusConfig.DefaultTopicName,
                 routingKey: eventName,
                 mandatory: true,
-                basicProperties:properties,
+                basicProperties: properties,
                 body: body
-                );
-
+            );
         });
-
     }
 
     public override void Subscribe<T, TH>()
@@ -123,7 +127,7 @@ public class EventBusRabbitMQ : BaseEventBus
                 exchange: EventBusConfig.DefaultTopicName,
                 eventName);
         }
-        
+
         SubsManager.AddSubscription<T, TH>();
         StartBasicConsume(eventName);
     }
@@ -157,17 +161,17 @@ public class EventBusRabbitMQ : BaseEventBus
         {
             _persistanceConnection.TryConnect();
         }
-        
-        consumerChannel.QueueUnbind(queue:eventName,
-            exchange:EventBusConfig.DefaultTopicName,
-            routingKey:eventName);
+
+        consumerChannel.QueueUnbind(queue: eventName,
+            exchange: EventBusConfig.DefaultTopicName,
+            routingKey: eventName);
 
         if (SubsManager.IsEmpty)
         {
             consumerChannel.Close();
         }
     }
-    
+
     private void StartBasicConsume(string eventName)
     {
         if (consumerChannel != null)
@@ -175,7 +179,7 @@ public class EventBusRabbitMQ : BaseEventBus
             var consumer = new EventingBasicConsumer(consumerChannel);
 
             consumer.Received += Consumer_Received;
-            
+
             consumerChannel.BasicConsume(queue: GetSubName(eventName), autoAck: false, consumer: consumer);
         }
     }
@@ -194,6 +198,7 @@ public class EventBusRabbitMQ : BaseEventBus
         {
             // logging
         }
+
         consumerChannel.BasicAck(e.DeliveryTag, false);
     }
 }

@@ -4,24 +4,49 @@ services:
     build:
       context: .
       dockerfile: src/Services/IdentityService/IdentityService.Api/Dockerfile
-
   saleservice.api:
     image: ${DOCKER_REGISTRY-}saleserviceapi
     build:
       context: .
       dockerfile: src/Services/SaleService/SaleService.Api/Dockerfile
-
-
   customerservice.api:
     image: ${DOCKER_REGISTRY-}customerserviceapi
     build:
       context: .
       dockerfile: src/Services/CustomerService/CustomerService.Api/Dockerfile
-
-
   web.apigateway:
     image: ${DOCKER_REGISTRY-}webapigateway
     build:
       context: .
       dockerfile: src/ApiGateways/WebApiGateway/Web.ApiGateway/Dockerfile
-
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    
+  redis:
+    image: 'redis:7.2.7-alpine'
+    container_name: 'redis'
+          
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    container_name: elasticsearch
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.3
+    container_name: kibana
+  postgresql-customer:
+    container_name: postgresql-customer
+    image: postgres:16
+    
+  postgresql-sale:
+    container_name: postgresql-sale
+    image: postgres:16
+    
+  postgresql-identity:
+    container_name: postgresql-identity
+    image: postgres:16
+    
+  nginx:
+    image: nginx:1.26.2
+    container_name: 'nginx' 
+ 

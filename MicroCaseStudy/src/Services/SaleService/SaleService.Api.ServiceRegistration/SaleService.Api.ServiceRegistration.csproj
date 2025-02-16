@@ -23,7 +23,6 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Base\EventBus.Base.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.Api\Core.Api.csproj" />
       <ProjectReference Include="..\..\..\Cores\Core.CrossCuttingConcerns\Core.CrossCuttingConcerns.csproj" />
-      <ProjectReference Include="..\..\..\Cores\Core.Redis\Core.Redis.csproj" />
     </ItemGroup>
 
 </Project>

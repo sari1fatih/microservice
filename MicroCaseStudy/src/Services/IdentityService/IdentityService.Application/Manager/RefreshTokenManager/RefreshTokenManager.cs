@@ -21,7 +21,7 @@ public class RefreshTokenManager : IRefreshTokenManager
     public async Task SetActiveRefreshTokenToRedis()
     {
         var refreshTokens = await _refreshTokenRepository.GetListForRedis();
-        
+        await _distributedHelper.RemoveCache(RedisConstants.Jwt, string.Empty, CancellationToken.None);
         foreach (var item in refreshTokens)
         {
             await _distributedHelper.AddToCache(
