@@ -6,6 +6,68 @@ The structure is being established...
 # Prerequisites
 .NET 8.0 Runtime
 
+Docker
+
+  ### BackEnd:
+   To start up the Api and the database
+   
+   ```ruby
+   docker-compose build
+   ```
+   ```ruby
+   docker-compose up
+   ``` 
+  
+  ### For Database Migration:
+  ### 1. To create tables in the identity database.In the terminal go to the directory.
+  
+  ```ruby
+  src/Services/IdentityService/IdentityService.Api
+  ```   
+  
+  Run following code in Package Manager Console
+  ```ruby
+  Update-Database -Context IdentityServiceDbContext
+  ```
+  Or 
+
+  Run following code in 
+  ```ruby
+  dotnet ef database update --context IdentityServiceDbContext
+  ```
+  ### 2. To create tables in the customer database.In the terminal go to the directory.
+  
+  ```ruby
+  src/Services/CustomerService/CustomerService.Api
+  ```   
+  
+  Run following code in Package Manager Console
+  ```ruby
+  Update-Database -Context CustomerServiceDbContext
+  ```
+  Or 
+
+  Run following code in 
+  ```ruby
+  dotnet ef database update --context CustomerServiceDbContext
+  ```
+  ### 3. To create tables in the sale database.In the terminal go to the directory.
+  
+  ```ruby
+  src/Services/SaleService/SaleService.Api
+  ```   
+  
+  ### Second:
+  Run following code in Package Manager Console
+  ```ruby
+  Update-Database -Context SaleServiceDbContext
+  ```
+  Or 
+
+  Run following code in 
+  ```ruby
+  dotnet ef database update --context SaleServiceDbContext
+  ```
 
   ## Technologies used:
 
