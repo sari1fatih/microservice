@@ -62,7 +62,8 @@ Docker structure is being established...
   Update-Database -Context SaleServiceDbContext
   ```
   Or 
-  
+
+  Run following code in 
   ```ruby
   dotnet ef database update --context SaleServiceDbContext
   ```
