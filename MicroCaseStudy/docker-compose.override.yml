@@ -114,7 +114,7 @@ services:
       - net_backend
   
   rabbitmq:
-    expose:
+    ports:
       - '5672:5672' # AMQP protokolü için
       - '15672:15672' # Yönetim paneli için
     environment:
@@ -191,7 +191,6 @@ services:
     ports:
       - '80:80'
       - "6379:6379"
-      - "5672:5672"
     volumes:
       - ./DockerFiles/nginx/localhost.conf:/etc/nginx/nginx.conf
     networks:
