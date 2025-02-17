@@ -30,7 +30,7 @@ services:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
     networks:
-      - net_backend 
+      - net_backend
 
   postgresql-identity:
     ports:
@@ -171,7 +171,7 @@ services:
       - '5601:5601'
     volumes:
       - ./DockerFiles/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-      - /var/lib/docker/kibana:/usr/share/kibana/data
+      - kibana-data:/usr/share/kibana/data
     environment:
       - xpack.security.enabled=false
       - xpack.fleet.agents.enabled=false
@@ -194,13 +194,13 @@ services:
       - "5672:5672"
     volumes:
       - ./DockerFiles/nginx/localhost.conf:/etc/nginx/nginx.conf
-    restart: always
     networks:
       - net_nginx
 
 volumes:
   rabbitmq-data:
   redis-data:
+  kibana-data:
   elasticsearch-data:
   postgresql-sale-data:
   postgresql-customer-data:
