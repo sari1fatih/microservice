@@ -39,7 +39,7 @@ Docker structure is being established...
   
   ```ruby
   src/Services/CustomerService/CustomerService.Api
-  ```   
+  ```  
   
   Run following code in Package Manager Console
   ```ruby
@@ -57,18 +57,20 @@ Docker structure is being established...
   src/Services/SaleService/SaleService.Api
   ```   
   
-  ### Second:
   Run following code in Package Manager Console
   ```ruby
   Update-Database -Context SaleServiceDbContext
   ```
   Or 
-
-  Run following code in 
+  
   ```ruby
   dotnet ef database update --context SaleServiceDbContext
   ```
-
+### 4. Last Step
+To restart both containers, use the following command:
+ ```ruby
+  docker restart microcasestudy-identityservice.api-1
+  ```
   ## Technologies used:
 
 * ASP.NET Core
