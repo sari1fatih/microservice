@@ -2,12 +2,12 @@
 
 https://www.youtube.com/watch?v=qiFnLOjG_2s
 
-The structure is being established...
+![General Architecture](MicroCaseStudy/system-summary.png)
+
 # Prerequisites
 .NET 8.0 Runtime
 
-Docker
-
+Docker structure is being established...
   # BackEnd:
    To start up the Api and the database
    
