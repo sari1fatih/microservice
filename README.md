@@ -15,7 +15,7 @@ Docker structure is being established...
    docker-compose build
    ```
    ```ruby
-   docker-compose up
+   docker-compose up -d
    ``` 
   
   # For Database Migration:
