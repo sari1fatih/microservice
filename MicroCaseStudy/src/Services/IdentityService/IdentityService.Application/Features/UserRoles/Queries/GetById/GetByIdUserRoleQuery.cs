@@ -8,28 +8,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Application.Features.UserRoles.Queries.GetById;
 
-public class GetByIdUserRoleQuery: IRequest<Response<GetByIdUserRoleDto>>
+public class GetByIdUserRoleQuery : IRequest<Response<GetByIdUserRoleDto>>
 {
     public int Id { get; set; }
 
     public class GetByIdUserRoleQueryHandler
-        : IRequestHandler<GetByIdUserRoleQuery,Response<GetByIdUserRoleDto>>
+        : IRequestHandler<GetByIdUserRoleQuery, Response<GetByIdUserRoleDto>>
     {
-        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly UserRoleBusinessRules _userRoleBusinessRules;
-        private readonly IBaseService _baseService; 
+        private readonly IBaseService _baseService;
+
         public GetByIdUserRoleQueryHandler(
-            IUserRoleRepository userRoleRepository,
             IMapper mapper,
             UserRoleBusinessRules userRoleBusinessRules,
-            IBaseService baseService
-        )
+            IBaseService baseService,
+            IUserRepository userRepository)
         {
-            _userRoleRepository = userRoleRepository;
             _mapper = mapper;
             _userRoleBusinessRules = userRoleBusinessRules;
-            _baseService = baseService; 
+            _baseService = baseService;
+            _userRepository = userRepository;
         }
 
         public async Task<Response<GetByIdUserRoleDto>> Handle(
@@ -37,18 +37,29 @@ public class GetByIdUserRoleQuery: IRequest<Response<GetByIdUserRoleDto>>
             CancellationToken cancellationToken
         )
         {
-            Domain.Entities.UserRole? userRole = await _userRoleRepository.GetAsync(
-                predicate: b => b.Id.Equals(request.Id),
-                include: m => m.Include(b => b.User).Include(b => b.Role),   
-                enableTracking: false,
-                cancellationToken: cancellationToken
-            );
-            await _userRoleBusinessRules.UserRoleShouldExistWhenSelected(userRole);
-
+            GetByIdUserRoleDto getByIdUserRoleDto = await _userRepository
+                .Query()
+                .AsNoTracking()
+                .Include(x => x.UserRoleUsers)
+                .ThenInclude(x => x.Role)
+                .Where(x => x.Id.Equals(request.Id))
+                .Select(x => new GetByIdUserRoleDto()
+                {
+                    Id = x.Id,
+                    Username = x.Username,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Roles = x.UserRoleUsers.Select(a => new GetByIdUserRoleDetailDto
+                    {
+                        RoleId = a.RoleId,
+                        RoleValue = a.Role.RoleValue
+                    }).ToList()
+                }).FirstOrDefaultAsync();
+            
             GetByIdUserRoleDto userRoleDto = _mapper.Map<GetByIdUserRoleDto>(
-                userRole
+                getByIdUserRoleDto
             );
-            return _baseService.CreateSuccessResult<GetByIdUserRoleDto>(userRoleDto,InternalsConstants.Success);
+            return _baseService.CreateSuccessResult<GetByIdUserRoleDto>(userRoleDto, InternalsConstants.Success);
         }
     }
 }

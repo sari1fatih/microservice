@@ -11,6 +11,7 @@ public static class IQueryableDynamicFilterExtensions
     private static readonly IDictionary<string, string> _operators = new Dictionary<string, string>
     {
         { "eq", "=" },
+        { "any", "Any" },
         { "neq", "!=" },
         { "lt", "<" },
         { "lte", "<=" },
@@ -88,21 +89,24 @@ public static class IQueryableDynamicFilterExtensions
         int index = filters.IndexOf(filter);
         string comparison = _operators[filter.Operator];
         StringBuilder where = new();
-
-        if (!string.IsNullOrEmpty(filter.Value))
-        {
-            if (filter.Operator == "doesnotcontain")
-                where.Append($"(!np({filter.Field}).{comparison}(@{index.ToString()}))");
-            else if (comparison is "StartsWith" or "EndsWith" or "Contains")
-                where.Append($"(np({filter.Field}).{comparison}(@{index.ToString()}))");
-            else
-                where.Append($"np({filter.Field}) {comparison} @{index.ToString()}");
-        }
-        else if (filter.Operator is "isnull" or "isnotnull")
-        {
-            where.Append($"np({filter.Field}) {comparison}");
-        }
-
+       
+       
+            if (!string.IsNullOrEmpty(filter.Value))
+            {
+                if (filter.Operator == "any")
+                    where.Append(filter.Field.Replace(filter.Field.Split('@')[1].Split(')')[0], filter.Value.ToString()));
+                else if (filter.Operator == "doesnotcontain")
+                    where.Append($"(!np({filter.Field}).{comparison}(@{index.ToString()}))");
+                else if (comparison is "StartsWith" or "EndsWith" or "Contains")
+                    where.Append($"(np({filter.Field}).{comparison}(@{index.ToString()}))");
+                else
+                    where.Append($"np({filter.Field}) {comparison} @{index.ToString()}");
+            }
+            else if (filter.Operator is "isnull" or "isnotnull")
+            {
+                where.Append($"np({filter.Field}) {comparison}");
+            } 
+     
         if (filter.Logic is not null && filter.Filters is not null && filter.Filters.Any())
         {
             if (!_logics.Contains(filter.Logic))
